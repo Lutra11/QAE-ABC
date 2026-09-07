@@ -1,0 +1,23 @@
+# Keep machine-local environments, generated working files, and secrets private.
+/archive/
+/outputs/
+**/node_modules/
+**/__pycache__/
+**/.venv/
+**/.pytest_cache/
+*.py[cod]
+~$*
+.env
+.env.*
+# Research models and datasets are intentionally included in this release.
+# Third-party redistribution terms still apply; see datasets/DATASET.md.
+*.exe
+*.dll
+*.zip
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+client_secret*.json
+*.log

@@ -1,0 +1,21 @@
+study_id: truss_qae_abc_v1
+master_seed: 20260903
+design_groups: 4
+food_sources: 30
+iterations: 100
+independent_runs: 30
+target_beta: 3.0
+confidence_level: 0.95
+oracle_bits_per_variable: 3
+reference_samples: 1048576
+surrogate_candidate_orders: [2, 3]
+area_lower_bounds_m2: [0.0035, 0.0035, 0.0035, 0.0035]
+area_upper_bounds_m2: [0.025, 0.025, 0.025, 0.025]
+dynamic_query_budgets: [512, 2048, 8192]
+grover_depths: [0, 1, 2, 4, 8, 16]
+noise_lambda: 0.005
+calibrated_noise_lambda: 0.005
+global_guidance: 0.5
+scout_limit: 60
+temperature: 5.0
+cache_tolerance_m2: 0.0001
