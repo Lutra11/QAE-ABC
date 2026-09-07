@@ -299,17 +299,6 @@ The retained implementations preserve historical input/output defaults designed 
 
 Use an isolated workspace, explicitly map current model filenames to the required inputs, and write new results separately from the curated workbooks. Do not reinterpret a newly chosen split or a smoke run as reproduction of the reported experiment.
 
-## Evidence and reproducibility safeguards
+## License
 
-- Preserve sample IDs, design groups, temporal partitions and intentional missing predictions.
-- Evaluate probability error, interval coverage, feasibility and runtime/query use jointly.
-- Distinguish exact truss checks from surrogate-based OC4 probability labels.
-- Keep scalar-amplitude simulation, functional-circuit simulation, calibration-snapshot noise and real hardware as separate evidence categories.
-- Retain failed acceptance thresholds and competing-method evidence rather than claiming a universal winner.
-- Treat short-window DEL screening and 600 s spot checks as limited engineering evidence.
-- Keep original model/data contents unchanged during filename and presentation cleanup.
-- Do not infer a full rerun pipeline from the presence of curated data, models and result tables.
-
-## Licensing and attribution
-
-No project-wide license is assigned in this repository. Third-party source data and software retain their own terms; consult the dataset and upstream provenance before reuse or redistribution. The homepage organization follows the research-repository presentation of [SHDMS-ABC](https://github.com/Lutra11/SHDMS-ABC), but its railway algorithms, experimental results and license are not adopted here.
+The original project code is released under the [MIT License](LICENSE).
