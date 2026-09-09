@@ -70,9 +70,3 @@ python -m pytest experiments/tests -q -p no:cacheprovider
 Historical verification with the shared helpers present produced 34 passes and one missing-model failure; supplying the original OpenFAST SubDyn model read-only gave 35 passes, and all 13 numbered imports passed at that stage. The subsequent removal of `common/` means those results do not certify the current clone as self-contained. Restore the required helpers and configure `SOURCE_CASE` before repeating that check.
 
 See [DATASET.md](../datasets/DATASET.md) for downloadable samples, schemas and read-only examples, and the [algorithm guide](../algorithm/README.md) for current model filenames. E4 is calibrated-noise simulation, not real-QPU execution; E13 is limited dynamic validation, not a certification campaign.
-
-## What was removed from the publication source directory?
-
-The original 50 scripts were first reduced to 13 main scripts plus six separated helpers; the current publication snapshot retains only the 13 main scripts and excludes the helper directory. The remaining 31 scripts—additional comparisons, separate statistical/plotting scripts, access audits, report generators and orchestration utilities—were moved out of `git-content/`. They remain recoverable in the local backup at `C:/QAE-ABC/outputs/experiment_source_simplification_20260907/`, which includes the complete pre-cleanup experiment directory and a move audit.
-
-This selection simplifies navigation; it does not claim that the omitted experiments were never performed or that their results are invalid. Existing result tables, figures, datasets and model contents were not changed. Full historical reproduction and report rebuilding should use the original complete project.

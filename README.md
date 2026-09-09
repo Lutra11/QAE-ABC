@@ -1,12 +1,12 @@
 # QAE-ABC
 
-### Quantum amplitude estimation and artificial bee colony search for reliability-constrained structural design
+### Quantum amplitude estimation-assisted reliability-constrained optimization of offshore wind turbine jackets
 
-[Method](#method-at-a-glance) · [Results](#experimental-evidence) · [Experiments](#experimental-design) · [Data](#datasets-and-result-workbooks) · [Reproduction](#reproduction) · [Structure](#repository-structure)
+[Method](#method-at-a-glance) · [Results](#experimental-evidence) · [Figures](#manuscript-figures) · [Experiments](#experimental-design) · [Data](#datasets-and-result-workbooks) · [Reproduction](#reproduction) · [Structure](#repository-structure)
 
-QAE-ABC studies how probability estimation, uncertainty-aware candidate selection, and population-based search interact in structural reliability optimization. It combines artificial bee colony (ABC) search with quantum-amplitude-estimation (QAE) estimators and evaluates the resulting decisions through analytic benchmarks, reversible quantum circuits, a 10-bar truss, and an OC4 offshore jacket case.
+QAE-ABC connects historical wind and wave records, multi-fidelity structural-response models, quantum amplitude estimation (QAE), and artificial bee colony (ABC) search for reliability-constrained offshore jacket design. Probability intervals guide candidate ranking and adaptive query allocation. Analytic benchmarks, reversible quantum circuits, a 10-bar truss, and the OC4 jacket connect estimator behavior to structural optimization and independent design assessment.
 
-This repository provides the computational package, **13 main experiment entry points**, **four fitted model bundles**, **18 Parquet datasets**, **28 curated result workbooks**, and research figures. Raw environmental download caches are also included. The package preserves both supporting evidence and limitations: amplitude simulation is distinguished from functional-oracle execution, and short-window engineering screening is distinguished from long-duration validation.
+This repository provides the computational package, **13 main experiment entry points**, **four fitted model bundles**, **18 Parquet datasets**, **28 curated result workbooks**, and **14 manuscript figures in PNG and PDF formats**. Raw environmental download caches and additional research figures are also included. The engineering optimization loop uses scalar-probability amplitude simulation; separate functional-circuit experiments assess the quantum implementation. Short-window response screening is followed by selected-design dynamic assessment.
 
 ## At a glance
 
@@ -23,6 +23,7 @@ This repository provides the computational package, **13 main experiment entry p
 | Final dynamic checks | Four selected designs x three wave seeds; 12 runs of 600 s |
 | Quantum evidence | Scalar-amplitude simulations, ideal functional circuits, calibrated-noise simulations and compiled resources |
 | Hardware status | No real-QPU execution is claimed |
+| Manuscript figures | [Figure 1–14 index](#manuscript-figures) · [PNG previews](Figures/) · [PDF files](Figures/pdf/) |
 | Research data | [Dataset guide](datasets/DATASET.md) · [Fixed Google Drive download](https://drive.google.com/drive/folders/1Md0APmG8a8DiTAL7MSG1-5Nc7lLaEEDF) |
 
 ## Research question
@@ -37,9 +38,9 @@ The evidence follows four connected questions: how estimators behave under contr
 
 ## Method at a glance
 
-![QAE-ABC research framework](images/png/Framework.png)
+[![Figure 2 — Engineering evaluation and QAE-ABC optimization framework](Figures/Figure2-Framework.png)](Figures/pdf/Figure2.pdf)
 
-*Historical environmental records support engineering response models and reliability labels. ABC proposes designs, while probability estimates and intervals inform candidate ranking. The OC4 optimization branch uses scalar-probability amplitude simulation; the functional-oracle branch is assessed separately.*
+*Figure 2. Historical environmental records support engineering response models and reliability labels. ABC proposes designs, while probability estimates and intervals inform candidate ranking. Click the figure to open its PDF.*
 
 The workflow combines six components:
 
@@ -64,22 +65,24 @@ Core implementations are in [optimization/abc.py](algorithm/qae_abc/optimization
 
 ### Engineering parameterization
 
-![OC4 jacket design variables](images/png/Structure.png)
+[![Figure 1 — OC4 jacket configuration and eight section design variables](Figures/Figure1-Structure.png)](Figures/pdf/Figure1.pdf)
 
-*Four member groups define eight diameter/thickness variables. The model retains the jacket topology and uses physically meaningful section dimensions; the schematic is not a certification drawing.*
+*Figure 1. Four member groups define eight diameter/thickness variables while retaining the jacket topology. [Figure 3](Figures/pdf/Figure3.pdf) details the scalar-probability amplitude-estimation interface used within the engineering search.*
 
 ## Experimental evidence
+
+The previews below use the manuscript figure set in [`Figures/`](Figures/). Click a preview to open its corresponding PDF; the [complete figure index](#manuscript-figures) includes all 14 PNG/PDF pairs.
 
 ### Probability estimation and structural decisions
 
 <table>
 <tr>
-<td width="50%"><img src="images/png/Fig-4.png" alt="Probability-estimator accuracy and interval evidence" width="100%"></td>
-<td width="50%"><img src="images/png/Fig-5.png" alt="Truss optimizer comparisons and feasibility evidence" width="100%"></td>
+<td width="50%"><a href="Figures/pdf/Figure7.pdf"><img src="Figures/Figure7.png" alt="Figure 7 — Probability-estimation error versus query budget and simulated noise" width="100%"></a></td>
+<td width="50%"><a href="Figures/pdf/Figure10.pdf"><img src="Figures/Figure10.png" alt="Figure 10 — Truss endpoint mass and exact feasibility across twelve configurations" width="100%"></a></td>
 </tr>
 <tr>
-<td><strong>Estimator behavior.</strong> Error and coverage are examined together across probability levels and query budgets.</td>
-<td><strong>Optimization behavior.</strong> Structural mass is interpreted jointly with exact feasibility and between-run variability.</td>
+<td><strong>Figure 7 · Probability estimation.</strong> Query-budget convergence and simulated-noise comparisons characterize estimation accuracy.</td>
+<td><strong>Figure 10 · Truss optimization.</strong> Endpoint mass is assessed together with exact feasibility across twelve algorithm configurations.</td>
 </tr>
 </table>
 
@@ -87,24 +90,24 @@ The analytic and nonlinear studies compare estimation rather than assuming that 
 
 See the [analytic table](data/4-3-1-1.xlsx), [nonlinear table](data/4-3-1-2.xlsx), [truss comparison](data/4-3-3-1.xlsx), and [ablation table](data/4-3-3-2.xlsx).
 
-### Engineering transfer and quantum implementation
+### Engineering response and design assessment
 
 <table>
 <tr>
-<td width="50%"><img src="images/png/Fig-7.png" alt="OC4 response-surrogate parity" width="100%"></td>
-<td width="50%"><img src="images/png/Fig-8.png" alt="OC4 optimization and post-optimization validation" width="100%"></td>
+<td width="50%"><a href="Figures/pdf/Figure6.pdf"><img src="Figures/Figure6.png" alt="Figure 6 — Agreement between response-surrogate predictions and OpenFAST results" width="100%"></a></td>
+<td width="50%"><a href="Figures/pdf/Figure14.pdf"><img src="Figures/Figure14.png" alt="Figure 14 — Optimized OC4 mass and selected-design dynamic response changes" width="100%"></a></td>
 </tr>
 <tr>
-<td><strong>Response-model evidence.</strong> Response-specific parity checks characterize surrogate error before reliability optimization.</td>
-<td><strong>Engineering evidence.</strong> Selected designs are assessed using temporal environments and a separate dynamic-validation campaign.</td>
+<td><strong>Figure 6 · Response models.</strong> Predictions are compared with OpenFAST for each structural-response quantity.</td>
+<td><strong>Figure 14 · Engineering outcomes.</strong> Optimization mass and selected-design response changes connect lightweight design to dynamic assessment.</td>
 </tr>
 <tr>
-<td width="50%"><img src="images/png/Fig-6.png" alt="Sensitivity to estimation and optimization settings" width="100%"></td>
-<td width="50%"><img src="images/png/Fig-9.png" alt="OC4 probability-estimation and quantum-resource evidence" width="100%"></td>
+<td width="50%"><a href="Figures/pdf/Figure12.pdf"><img src="Figures/Figure12.png" alt="Figure 12 — Search-parameter effects and probability-estimation error in design selection" width="100%"></a></td>
+<td width="50%"><a href="Figures/pdf/Figure13.pdf"><img src="Figures/Figure13.png" alt="Figure 13 — Probability-estimator error and interval coverage for representative OC4 designs" width="100%"></a></td>
 </tr>
 <tr>
-<td><strong>Sensitivity.</strong> Confidence, query budget, noise and circuit-depth settings reveal conditional behavior.</td>
-<td><strong>Implementation boundaries.</strong> Probability-estimation evidence and compiled functional-oracle resources answer different questions.</td>
+<td><strong>Figure 12 · Design selection.</strong> Search settings and estimation error are examined for their effects on structural decisions.</td>
+<td><strong>Figure 13 · Jacket probability estimates.</strong> Relative error and interval coverage are compared across representative designs.</td>
 </tr>
 </table>
 
@@ -112,7 +115,30 @@ The functional-circuit experiment constructs and executes a **42-logical-qubit**
 
 The 400 HF cases are **10 s screening runs**. The final 12 cases run for 600 s, with the first 120 s excluded from response analysis. These are limited dynamic checks—not a complete fatigue, design-load-case or certification campaign.
 
-See [functional-circuit results](data/4-3-2-1.xlsx), [calibrated-noise results](data/4-3-2-2.xlsx), [OC4 oracle resources](data/4-3-2-3.xlsx), [surrogate results](data/4-3-4-1.xlsx), [OC4 optimization](data/4-3-4-3.xlsx), and [dynamic validation](data/4-3-4-5.xlsx). The [figure guide](images/README.md) links the remaining PNG/PDF and supplementary assets.
+See [functional-circuit results](data/4-3-2-1.xlsx), [calibrated-noise results](data/4-3-2-2.xlsx), [OC4 oracle resources](data/4-3-2-3.xlsx), [surrogate results](data/4-3-4-1.xlsx), [OC4 optimization](data/4-3-4-3.xlsx), and [dynamic validation](data/4-3-4-5.xlsx).
+
+## Manuscript figures
+
+The [`Figures/`](Figures/) directory follows manuscript numbering from **Figure 1 to Figure 14**. PNG files provide browser previews; the matching files in [`Figures/pdf/`](Figures/pdf/) are available for publication and LaTeX use. Each row below links both formats of the same figure.
+
+| Figure | Contents | PNG | PDF |
+| --- | --- | --- | --- |
+| 1 | Offshore jacket configuration and section design variables | [PNG](Figures/Figure1-Structure.png) | [PDF](Figures/pdf/Figure1.pdf) |
+| 2 | Engineering evaluation and QAE-ABC optimization framework | [PNG](Figures/Figure2-Framework.png) | [PDF](Figures/pdf/Figure2.pdf) |
+| 3 | Scalar-probability amplitude estimation in the engineering optimization loop | [PNG](Figures/Figure3-QAE-ABC.png) | [PDF](Figures/pdf/Figure3.pdf) |
+| 4 | Historical wind–wave distributions, dependence and upper-tail quantiles | [PNG](Figures/Figure4-Dataset.png) | [PDF](Figures/pdf/Figure4.pdf) |
+| 5 | Cross-platform channel comparison with the OpenFAST reference | [PNG](Figures/Figure5.png) | [PDF](Figures/pdf/Figure5.pdf) |
+| 6 | Response-surrogate predictions compared with OpenFAST results | [PNG](Figures/Figure6.png) | [PDF](Figures/pdf/Figure6.pdf) |
+| 7 | Probability-estimation convergence and simulated-noise comparisons | [PNG](Figures/Figure7.png) | [PDF](Figures/pdf/Figure7.pdf) |
+| 8 | Estimation error versus query budget at four probability scales | [PNG](Figures/Figure8.png) | [PDF](Figures/pdf/Figure8.pdf) |
+| 9 | Jacket optimization, truss comparisons and algorithm ablations | [PNG](Figures/Figure9.png) | [PDF](Figures/pdf/Figure9.pdf) |
+| 10 | Truss endpoint mass and exact feasibility across twelve configurations | [PNG](Figures/Figure10.png) | [PDF](Figures/pdf/Figure10.pdf) |
+| 11 | Algorithm-component effects and exact endpoint correction | [PNG](Figures/Figure11.png) | [PDF](Figures/pdf/Figure11.pdf) |
+| 12 | Search-parameter sensitivity and estimation effects on design selection | [PNG](Figures/Figure12.png) | [PDF](Figures/pdf/Figure12.pdf) |
+| 13 | Estimator error and interval coverage for representative jacket designs | [PNG](Figures/Figure13.png) | [PDF](Figures/pdf/Figure13.pdf) |
+| 14 | Optimized jacket mass and longer-duration response changes | [PNG](Figures/Figure14.png) | [PDF](Figures/pdf/Figure14.pdf) |
+
+The existing [`images/`](images/README.md) collection retains additional experiment plots and earlier figure layouts. Its `Fig-*` filenames use a separate numbering scheme; use the index above when matching figures to the manuscript.
 
 ## Experimental design
 
@@ -186,10 +212,13 @@ QAE-ABC/
 ├── data/
 │   ├── 4-*.xlsx        # 15 main-result workbooks
 │   └── supplement/     # 13 supplementary workbooks
+├── Figures/
+│   ├── Figure*.png     # 14 manuscript figures for browser previews
+│   └── pdf/            # Matching Figure1.pdf through Figure14.pdf
 ├── images/
-│   ├── png/            # Framework, structural schematic and raster figures
-│   ├── pdf/            # Existing PDF figures
-│   ├── supplement/    # Additional figures
+│   ├── png/            # Additional plots and earlier figure layouts
+│   ├── pdf/            # Corresponding existing PDF figures
+│   ├── supplement/     # Additional figures
 │   └── README.md
 ├── requirements.txt
 ├── .gitignore
