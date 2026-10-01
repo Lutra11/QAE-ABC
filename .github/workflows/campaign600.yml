@@ -1,0 +1,138 @@
+name: 600 s multi-seed OpenFAST batch campaign
+
+on:
+  workflow_dispatch:
+    inputs:
+      batch_spec:
+        description: 'Batch name; must match campaign600/batches/<name>.json in this repo'
+        required: true
+        default: 'smoke'
+      shards:
+        description: 'Total shards (each shard runs a slice of the batch)'
+        required: false
+        default: '8'
+      tmax:
+        description: 'OpenFAST TMax (s)'
+        required: false
+        default: '660'
+
+jobs:
+  gen:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.m.outputs.matrix }}
+    steps:
+      - name: Generate shard index matrix
+        id: m
+        run: |
+          python3 - <<'PY'
+          import json, os
+          n = int("${{ github.event.inputs.shards }}" or "20")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as out:
+              out.write("matrix=" + json.dumps({"shard": list(range(n))}) + "\n")
+          PY
+  campaign:
+    needs: gen
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+    env:
+      OMP_NUM_THREADS: 1
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.gen.outputs.matrix) }}
+    steps:
+      - name: Checkout tooling repo (scripts + batch manifests)
+        uses: actions/checkout@v4
+
+      - name: Check shard has work (skip empty shards before the 40-min build)
+        id: has_work
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          batch = "${{ github.event.inputs.batch_spec }}"
+          shards = int("${{ github.event.inputs.shards }}" or "20")
+          shard = ${{ matrix.shard }}
+          rows = json.loads(Path(f"campaign600/batches/{batch}.json").read_text())
+          rows = rows["cases"] if isinstance(rows, dict) else rows
+          mine = [r for i, r in enumerate(rows) if i % shards == shard]
+          print(f"shard {shard}/{shards}: {len(mine)} cases")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as out:
+              out.write("has_work=" + ("true" if mine else "false") + "\n")
+          PY
+
+      - name: Install GNU toolchain (official CI mirror)
+        if: steps.has_work.outputs.has_work == 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends gfortran-14 g++-14 gcc-14 cmake ninja-build libatlas-base-dev python3-numpy
+
+      - name: Checkout OpenFAST v5.0.0 (tag)
+        if: steps.has_work.outputs.has_work == 'true'
+        run: |
+          git clone --depth 1 --branch v5.0.0 https://github.com/OpenFAST/openfast.git openfast
+          git -C openfast rev-parse HEAD
+
+      - name: Checkout r-test v5.0.0 (tag)
+        if: steps.has_work.outputs.has_work == 'true'
+        run: |
+          git clone --depth 1 --branch v5.0.0 https://github.com/OpenFAST/r-test.git r-test
+          git -C r-test rev-parse HEAD
+
+      - name: Configure (gfortran-14, double precision, BLA_VENDOR=ATLAS)
+        if: steps.has_work.outputs.has_work == 'true'
+        run: |
+          cmake -S openfast -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DCMAKE_Fortran_COMPILER=gfortran-14 \
+            -DCMAKE_C_COMPILER=gcc-14 \
+            -DCMAKE_CXX_COMPILER=g++-14 \
+            -DBLA_VENDOR=ATLAS \
+            -DDOUBLE_PRECISION=ON \
+            -DBUILD_TESTING=OFF \
+            -DCMAKE_INSTALL_PREFIX=$PWD/build-install
+
+      - name: Build openfast target
+        if: steps.has_work.outputs.has_work == 'true'
+        run: cmake --build build --target openfast
+
+      - name: Build DISCON shared library (Linux)
+        if: steps.has_work.outputs.has_work == 'true'
+        run: |
+          cd r-test/glue-codes/openfast/5MW_Baseline/ServoData/DISCON
+          gfortran-14 -shared -fPIC -O2 -std=legacy -o ../DISCON.dll DISCON.F90
+
+      - name: Record toolchain provenance
+        if: steps.has_work.outputs.has_work == 'true'
+        run: |
+          {
+            echo "=== OS ==="; head -4 /etc/os-release
+            echo "=== gfortran ==="; gfortran-14 --version | head -1
+            echo "=== OpenFAST commit ==="; git -C openfast rev-parse HEAD
+            echo "=== r-test commit ==="; git -C r-test rev-parse HEAD
+            echo "=== exe sha256 ==="; sha256sum build/glue-codes/openfast/openfast
+            echo "=== batch ==="; echo "${{ github.event.inputs.batch_spec }} shard ${{ matrix.shard }}"
+          } > provenance.txt
+
+      - name: Run campaign shard
+        if: steps.has_work.outputs.has_work == 'true'
+        run: |
+          python3 campaign600/runner_campaign.py \
+            campaign600/batches/${{ github.event.inputs.batch_spec }}.json \
+            "$GITHUB_WORKSPACE" \
+            "$GITHUB_WORKSPACE/build/glue-codes/openfast/openfast" \
+            "shard_${{ matrix.shard }}.json" \
+            "${{ matrix.shard }}" \
+            "${{ github.event.inputs.shards }}" \
+            "${{ github.event.inputs.tmax }}"
+
+      - name: Upload metrics artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: campaign600-${{ github.event.inputs.batch_spec }}-shard-${{ matrix.shard }}
+          path: |
+            shard_*.json
+            provenance.txt
+          retention-days: 30
+          if-no-files-found: ignore
