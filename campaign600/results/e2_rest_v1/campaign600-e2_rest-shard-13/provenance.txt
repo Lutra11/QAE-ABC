@@ -1,0 +1,15 @@
+=== OS ===
+PRETTY_NAME="Ubuntu 24.04.5 LTS"
+NAME="Ubuntu"
+VERSION_ID="24.04"
+VERSION="24.04.5 LTS (Noble Numbat)"
+=== gfortran ===
+GNU Fortran (Ubuntu 14.2.0-4ubuntu2~24.04.1) 14.2.0
+=== OpenFAST commit ===
+2895884d2be01862173c88d70f86b358d2f1a50a
+=== r-test commit ===
+dd5feaaaa500ba7283140107806300d551cff0a7
+=== exe sha256 ===
+5fddf8f6120ebd93684ee5dd34e9cedc3256966df10c886e0cd9ea82d38cb4e3  build/glue-codes/openfast/openfast
+=== batch ===
+e2_rest shard 13
