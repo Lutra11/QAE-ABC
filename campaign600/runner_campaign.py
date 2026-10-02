@@ -8,6 +8,7 @@ responses with 20%-tail statistics. Campaign600 variant: TMax=660 s, statistics 
 import hashlib
 import json
 import math
+import os
 import re
 import shutil
 import subprocess
@@ -16,6 +17,11 @@ import time
 from pathlib import Path
 
 import numpy as np
+
+# Per-case wall-clock limit (s). E2 evidence: healthy 660 s cases finish in
+# ~2 h; anything past 4 h is a stuck case, so record it as failed and move on
+# instead of burning the 6 h GitHub job limit on one case.
+CASE_TIMEOUT_S = int(os.environ.get("CASE_TIMEOUT_S", "14400"))
 
 BASELINE = {
     "D_L1": 1.2, "t_L1": 0.05, "D_L2": 1.2, "t_L2": 0.035,
@@ -217,10 +223,18 @@ def main() -> None:
     shard = int(sys.argv[5]) if len(sys.argv) > 5 and sys.argv[5] else 0
     total_shards = int(sys.argv[6]) if len(sys.argv) > 6 and sys.argv[6] else 1
     tmax = float(sys.argv[7]) if len(sys.argv) > 7 and sys.argv[7] else 660.0
+    # E3: after a build-cache hit the openfast/ source is not present; the
+    # runner only needs the exe plus the r-test template, so check those.
+    if not exe.exists():
+        raise SystemExit(f"openfast executable missing: {exe}")
+    if not (workspace / "r-test" / "glue-codes" / "openfast" / "5MW_OC4Jckt_DLL_WTurb_WavesIrr_MGrowth").exists():
+        raise SystemExit(f"r-test template missing under {workspace} - cannot prepare cases")
     # shard slice: deterministic round-robin for even load
     rows = [r for i, r in enumerate(rows) if i % total_shards == shard]
-    # checkpoint dir: per-case result.json inside the workspace, resumable
-    checkpoint_dir = workspace / "campaign600_checkpoints" / manifest_path.stem / f"shard_{shard}"
+    # checkpoint dir: per-case result.json inside the workspace, resumable.
+    # Lives under campaign600/ so the artifact upload glob (campaign600_checkpoints/**)
+    # captures incremental per-case progress even if the job is cancelled.
+    checkpoint_dir = workspace / "campaign600" / "campaign600_checkpoints" / manifest_path.stem / f"shard_{shard}"
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
     results = []
     for row in rows:
@@ -233,17 +247,26 @@ def main() -> None:
                 continue
         case_dir = prepare_case(row, workspace, tmax=tmax)
         start = time.perf_counter()
-        process = subprocess.run(
-            [str(exe), "case.fst"], cwd=case_dir,
-            capture_output=True, text=True, errors="replace", check=False)
+        try:
+            process = subprocess.run(
+                [str(exe), "case.fst"], cwd=case_dir,
+                capture_output=True, text=True, errors="replace", check=False,
+                timeout=CASE_TIMEOUT_S)
+            return_code = process.returncode
+            stdout_text = process.stdout or ""
+            stderr_text = process.stderr or ""
+        except subprocess.TimeoutExpired:
+            return_code = -1
+            stdout_text = ""
+            stderr_text = f"[runner] case exceeded CASE_TIMEOUT_S={CASE_TIMEOUT_S}s and was killed"
         elapsed = time.perf_counter() - start
-        (case_dir / "openfast_stdout.log").write_text(process.stdout or "", encoding="utf-8")
-        result = analyze(case_dir, row, elapsed, process.returncode)
+        (case_dir / "openfast_stdout.log").write_text(stdout_text, encoding="utf-8")
+        result = analyze(case_dir, row, elapsed, return_code)
         if not result["success"]:
-            (case_dir / "openfast_stderr.log").write_text(process.stderr or "", encoding="utf-8")
+            (case_dir / "openfast_stderr.log").write_text(stderr_text, encoding="utf-8")
         ckpt.write_text(json.dumps(result, indent=1, default=str), encoding="utf-8")
         results.append(result)
-        print(f"{row['case_id']}: rc={process.returncode} ok={result['success']} "
+        print(f"{row['case_id']}: rc={return_code} ok={result['success']} "
               f"wall={elapsed:.0f}s", flush=True)
     out_path.write_text(json.dumps(results, skipkeys=True, indent=1, default=str), encoding="utf-8")
     ok = sum(1 for r in results if r["success"])

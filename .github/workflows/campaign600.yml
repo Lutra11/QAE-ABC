@@ -67,8 +67,17 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends gfortran-14 g++-14 gcc-14 cmake ninja-build libatlas-base-dev python3-numpy
 
-      - name: Checkout OpenFAST v5.0.0 (tag)
+      - name: Cache OpenFAST build (v5.0.0, gfortran-14, ATLAS, RelWithDebInfo)
         if: steps.has_work.outputs.has_work == 'true'
+        id: restore_build
+        uses: actions/cache@v4
+        with:
+          path: |
+            build
+          key: openfast-v5.0.0-gfortran14-atlas-rwdi-v1
+
+      - name: Checkout OpenFAST v5.0.0 (tag)
+        if: steps.has_work.outputs.has_work == 'true' && steps.restore_build.outputs.cache-hit != 'true'
         run: |
           git clone --depth 1 --branch v5.0.0 https://github.com/OpenFAST/openfast.git openfast
           git -C openfast rev-parse HEAD
@@ -80,7 +89,7 @@ jobs:
           git -C r-test rev-parse HEAD
 
       - name: Configure (gfortran-14, double precision, BLA_VENDOR=ATLAS)
-        if: steps.has_work.outputs.has_work == 'true'
+        if: steps.has_work.outputs.has_work == 'true' && steps.restore_build.outputs.cache-hit != 'true'
         run: |
           cmake -S openfast -B build -G Ninja \
             -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -93,7 +102,7 @@ jobs:
             -DCMAKE_INSTALL_PREFIX=$PWD/build-install
 
       - name: Build openfast target
-        if: steps.has_work.outputs.has_work == 'true'
+        if: steps.has_work.outputs.has_work == 'true' && steps.restore_build.outputs.cache-hit != 'true'
         run: cmake --build build --target openfast
 
       - name: Build DISCON shared library (Linux)
@@ -108,14 +117,17 @@ jobs:
           {
             echo "=== OS ==="; head -4 /etc/os-release
             echo "=== gfortran ==="; gfortran-14 --version | head -1
-            echo "=== OpenFAST commit ==="; git -C openfast rev-parse HEAD
+            echo "=== OpenFAST commit ==="; git -C openfast rev-parse HEAD 2>/dev/null || echo "v5.0.0 tag (build cache hit, source not cloned)"
             echo "=== r-test commit ==="; git -C r-test rev-parse HEAD
             echo "=== exe sha256 ==="; sha256sum build/glue-codes/openfast/openfast
+            echo "=== build cache ==="; echo "hit=${{ steps.restore_build.outputs.cache-hit }}"
             echo "=== batch ==="; echo "${{ github.event.inputs.batch_spec }} shard ${{ matrix.shard }}"
           } > provenance.txt
 
       - name: Run campaign shard
         if: steps.has_work.outputs.has_work == 'true'
+        env:
+          CASE_TIMEOUT_S: '9000'
         run: |
           python3 campaign600/runner_campaign.py \
             campaign600/batches/${{ github.event.inputs.batch_spec }}.json \
@@ -134,5 +146,6 @@ jobs:
           path: |
             shard_*.json
             provenance.txt
+            campaign600/campaign600_checkpoints/**
           retention-days: 30
           if-no-files-found: ignore
