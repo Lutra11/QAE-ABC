@@ -15,6 +15,10 @@ on:
         description: 'OpenFAST TMax (s)'
         required: false
         default: '660'
+      case_timeout_s:
+        description: 'Per-case OpenFAST wall-time cap (s); 1-case shards should use >= 14400'
+        required: false
+        default: '9000'
 
 jobs:
   gen:
@@ -127,7 +131,7 @@ jobs:
       - name: Run campaign shard
         if: steps.has_work.outputs.has_work == 'true'
         env:
-          CASE_TIMEOUT_S: '9000'
+          CASE_TIMEOUT_S: ${{ github.event.inputs.case_timeout_s || '9000' }}
         run: |
           python3 campaign600/runner_campaign.py \
             campaign600/batches/${{ github.event.inputs.batch_spec }}.json \
