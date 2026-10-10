@@ -88,10 +88,10 @@ def configure_dcr_member_outputs(text: str, mapping: list[dict] = DCR_MEMBER_MAP
         "------------------------- SDOutList: local member forces and moments at both ends -------------------------"
     )
     for row in mapping:
-        alias = str(row["alias"])
+        channel_member = f"M{int(row['member_id'])}"
         for node in ("N1", "N2"):
             for suffix in MEMBER_CHANNEL_SUFFIXES:
-                block.append(f'"{alias}{node}{suffix}"')
+                block.append(f'"{channel_member}{node}{suffix}"')
     block.append("END of output channels and end of file. (the word END must appear in the first 3 columns of this line)")
     return "\n".join(lines[:start] + block + lines[end + 1 :]) + "\n"
 
@@ -101,7 +101,7 @@ def extract_dcr_member_demands(names, data, mask, design: dict, mapping: list[di
 
     index = {name: i for i, name in enumerate(names)}
     required = [
-        f"{row['alias']}{node}{suffix}"
+        f"M{int(row['member_id'])}{node}{suffix}"
         for row in mapping
         for node in ("N1", "N2")
         for suffix in MEMBER_CHANNEL_SUFFIXES
@@ -116,13 +116,14 @@ def extract_dcr_member_demands(names, data, mask, design: dict, mapping: list[di
     rows: list[dict] = []
     for member in mapping:
         alias = str(member["alias"])
+        channel_member = f"M{int(member['member_id'])}"
         diameter = float(design[str(member["diameter_column"])])
         thickness = float(design[str(member["thickness_column"])])
         length = float(member["member_length_m"])
         resistance = member_resistances(diameter, thickness, length)
         for node in ("N1", "N2"):
             values = {
-                suffix: selected[:, index[f"{alias}{node}{suffix}"]].astype(float)
+                suffix: selected[:, index[f"{channel_member}{node}{suffix}"]].astype(float)
                 for suffix in MEMBER_CHANNEL_SUFFIXES
             }
             axial = np.abs(values["FKZe"]) / resistance.compression_n
