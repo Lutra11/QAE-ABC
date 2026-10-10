@@ -41,6 +41,7 @@ FIVE_RESPONSES = [
     "max_platform_pitch_deg",
 ]
 MEMBER_CHANNEL_SUFFIXES = ("FKXe", "FKYe", "FKZe", "MKXe", "MKYe", "MKZe")
+LEGACY_DIAGNOSTIC_MEMBER_IDS = (5, 6)
 DEFAULT_MEMBER_MAP_PATH = Path(__file__).resolve().with_name("member_map.json")
 
 
@@ -71,6 +72,9 @@ def configure_dcr_member_outputs(text: str, mapping: list[dict] = DCR_MEMBER_MAP
     """Replace the SubDyn member-output block with both-end force/moment channels."""
 
     lines = text.splitlines()
+    mapped_ids = [int(row["member_id"]) for row in mapping]
+    diagnostic_ids = [member_id for member_id in LEGACY_DIAGNOSTIC_MEMBER_IDS if member_id not in mapped_ids]
+    output_ids = mapped_ids + diagnostic_ids
     try:
         start = next(i for i, line in enumerate(lines) if "MEMBER OUTPUT LIST" in line)
         end = next(i for i in range(start, len(lines)) if lines[i].lstrip().startswith("END"))
@@ -78,17 +82,19 @@ def configure_dcr_member_outputs(text: str, mapping: list[dict] = DCR_MEMBER_MAP
         raise ValueError("SubDyn member-output block was not found") from exc
     block = [
         lines[start],
-        f"{len(mapping):14d}   NMOutputs   - Number of members whose forces/displacements/velocities/accelerations will be output (-) [Must be <= 99].",
+        f"{len(output_ids):14d}   NMOutputs   - Number of members whose forces/displacements/velocities/accelerations will be output (-) [Must be <= 99].",
         "MemberID   NOutCnt    NodeCnt ! Both member ends are retained for DCR evaluation",
         "  (-)        (-)        (-)",
     ]
     for row in mapping:
         block.append(f"{int(row['member_id']):4d}          2          1  3       ! {row['alias']} {row['group']}")
+    for member_id in diagnostic_ids:
+        block.append(f"{member_id:4d}          2          1  3       ! legacy response diagnostic")
     block.append(
         "------------------------- SDOutList: local member forces and moments at both ends -------------------------"
     )
-    for row in mapping:
-        channel_member = f"M{int(row['member_id'])}"
+    for member_id in output_ids:
+        channel_member = f"M{member_id}"
         for node in ("N1", "N2"):
             for suffix in MEMBER_CHANNEL_SUFFIXES:
                 block.append(f'"{channel_member}{node}{suffix}"')
