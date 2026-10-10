@@ -1,0 +1,66 @@
+[
+  {
+    "alias": "M1",
+    "member_id": 22,
+    "group": "L2",
+    "diameter_column": "D_L2",
+    "thickness_column": "t_L2",
+    "member_length_m": 15.708761949943732
+  },
+  {
+    "alias": "M2",
+    "member_id": 30,
+    "group": "L2",
+    "diameter_column": "D_L2",
+    "thickness_column": "t_L2",
+    "member_length_m": 15.708761949943732
+  },
+  {
+    "alias": "M3",
+    "member_id": 73,
+    "group": "B2",
+    "diameter_column": "D_B2",
+    "thickness_column": "t_B2",
+    "member_length_m": 8.472406977949065
+  },
+  {
+    "alias": "M4",
+    "member_id": 83,
+    "group": "B2",
+    "diameter_column": "D_B2",
+    "thickness_column": "t_B2",
+    "member_length_m": 8.472406977949065
+  },
+  {
+    "alias": "M5",
+    "member_id": 41,
+    "group": "B1",
+    "diameter_column": "D_B1",
+    "thickness_column": "t_B1",
+    "member_length_m": 11.934
+  },
+  {
+    "alias": "M6",
+    "member_id": 51,
+    "group": "B1",
+    "diameter_column": "D_B1",
+    "thickness_column": "t_B1",
+    "member_length_m": 11.934
+  },
+  {
+    "alias": "M7",
+    "member_id": 6,
+    "group": "L1",
+    "diameter_column": "D_L1",
+    "thickness_column": "t_L1",
+    "member_length_m": 18.532826039220247
+  },
+  {
+    "alias": "M8",
+    "member_id": 14,
+    "group": "L1",
+    "diameter_column": "D_L1",
+    "thickness_column": "t_L1",
+    "member_length_m": 18.532826039220247
+  }
+]

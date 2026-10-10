@@ -1,0 +1,48 @@
+{
+ "cases": [
+  {
+   "case_id": "DCRSCR_baseline_calm",
+   "group": "baseline",
+   "D_L1": 1.2,
+   "t_L1": 0.05,
+   "D_L2": 1.2,
+   "t_L2": 0.035,
+   "D_B1": 0.8,
+   "t_B1": 0.02,
+   "D_B2": 0.8,
+   "t_B2": 0.02,
+   "env_tag": "calm",
+   "source_case_id": "HA0100_0069",
+   "wind_speed_used": 3.13,
+   "wave_height_used": 0.5,
+   "wave_period_used": 4.35,
+   "wave_direction_used": 38.0,
+   "wave_seed_source": 742554125.0,
+   "seed_index": 0,
+   "wave_seed": 742554125,
+   "dcr_outputs": true
+  },
+  {
+   "case_id": "DCRSCR_baseline_mid",
+   "group": "baseline",
+   "D_L1": 1.2,
+   "t_L1": 0.05,
+   "D_L2": 1.2,
+   "t_L2": 0.035,
+   "D_B1": 0.8,
+   "t_B1": 0.02,
+   "D_B2": 0.8,
+   "t_B2": 0.02,
+   "env_tag": "mid",
+   "source_case_id": "HF0300_0158",
+   "wind_speed_used": 9.72,
+   "wave_height_used": 1.3,
+   "wave_period_used": 5.75,
+   "wave_direction_used": 21.0,
+   "wave_seed_source": 1960664516.0,
+   "seed_index": 0,
+   "wave_seed": 1960664516,
+   "dcr_outputs": true
+  }
+ ]
+}

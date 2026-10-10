@@ -18,6 +18,13 @@ from pathlib import Path
 
 import numpy as np
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+try:
+    from qae_abc.reliability.jacket_capacity import member_resistances
+except ImportError:  # standalone GitHub Actions checkout
+    sys.path.insert(0, str(REPO_ROOT / "algorithm"))
+    from qae_abc.reliability.jacket_capacity import member_resistances
+
 # Per-case wall-clock limit (s). E2 evidence: healthy 660 s cases finish in
 # ~2 h; anything past 4 h is a stuck case, so record it as failed and move on
 # instead of burning the 6 h GitHub job limit on one case.
@@ -33,6 +40,134 @@ FIVE_RESPONSES = [
     "max_hydrodynamic_force_kn", "max_tracked_member_force_kn",
     "max_platform_pitch_deg",
 ]
+MEMBER_CHANNEL_SUFFIXES = ("FKXe", "FKYe", "FKZe", "MKXe", "MKYe", "MKZe")
+DEFAULT_MEMBER_MAP_PATH = Path(__file__).resolve().with_name("member_map.json")
+
+
+def load_member_map(path: Path = DEFAULT_MEMBER_MAP_PATH) -> list[dict]:
+    mapping = json.loads(Path(path).read_text(encoding="utf-8"))
+    if not isinstance(mapping, list) or not mapping:
+        raise ValueError("member map must be a non-empty JSON list")
+    expected_aliases = [f"M{i}" for i in range(1, len(mapping) + 1)]
+    aliases = [str(row["alias"]) for row in mapping]
+    if aliases != expected_aliases:
+        raise ValueError(f"member aliases must be sequential: {expected_aliases}")
+    required = {
+        "alias", "member_id", "group", "diameter_column", "thickness_column", "member_length_m"
+    }
+    for row in mapping:
+        missing = required - set(row)
+        if missing:
+            raise ValueError(f"member map row is missing {sorted(missing)}")
+        if float(row["member_length_m"]) <= 0.0:
+            raise ValueError("member_length_m must be positive")
+    return mapping
+
+
+DCR_MEMBER_MAP = load_member_map()
+
+
+def configure_dcr_member_outputs(text: str, mapping: list[dict] = DCR_MEMBER_MAP) -> str:
+    """Replace the SubDyn member-output block with both-end force/moment channels."""
+
+    lines = text.splitlines()
+    try:
+        start = next(i for i, line in enumerate(lines) if "MEMBER OUTPUT LIST" in line)
+        end = next(i for i in range(start, len(lines)) if lines[i].lstrip().startswith("END"))
+    except StopIteration as exc:
+        raise ValueError("SubDyn member-output block was not found") from exc
+    block = [
+        lines[start],
+        f"{len(mapping):14d}   NMOutputs   - Number of members whose forces/displacements/velocities/accelerations will be output (-) [Must be <= 99].",
+        "MemberID   NOutCnt    NodeCnt ! Both member ends are retained for DCR evaluation",
+        "  (-)        (-)        (-)",
+    ]
+    for row in mapping:
+        block.append(f"{int(row['member_id']):4d}          2          1  3       ! {row['alias']} {row['group']}")
+    block.append(
+        "------------------------- SDOutList: local member forces and moments at both ends -------------------------"
+    )
+    for row in mapping:
+        alias = str(row["alias"])
+        for node in ("N1", "N2"):
+            for suffix in MEMBER_CHANNEL_SUFFIXES:
+                block.append(f'"{alias}{node}{suffix}"')
+    block.append("END of output channels and end of file. (the word END must appear in the first 3 columns of this line)")
+    return "\n".join(lines[:start] + block + lines[end + 1 :]) + "\n"
+
+
+def extract_dcr_member_demands(names, data, mask, design: dict, mapping: list[dict] = DCR_MEMBER_MAP) -> list[dict]:
+    """Extract simultaneous local demands at each location's governing utilization."""
+
+    index = {name: i for i, name in enumerate(names)}
+    required = [
+        f"{row['alias']}{node}{suffix}"
+        for row in mapping
+        for node in ("N1", "N2")
+        for suffix in MEMBER_CHANNEL_SUFFIXES
+    ]
+    for channel in required:
+        if channel not in index:
+            raise KeyError(channel)
+    selected = np.asarray(data)[np.asarray(mask, dtype=bool)]
+    if selected.shape[0] == 0:
+        raise ValueError("DCR extraction window contains no samples")
+    time_values = selected[:, index["Time"]].astype(float)
+    rows: list[dict] = []
+    for member in mapping:
+        alias = str(member["alias"])
+        diameter = float(design[str(member["diameter_column"])])
+        thickness = float(design[str(member["thickness_column"])])
+        length = float(member["member_length_m"])
+        resistance = member_resistances(diameter, thickness, length)
+        for node in ("N1", "N2"):
+            values = {
+                suffix: selected[:, index[f"{alias}{node}{suffix}"]].astype(float)
+                for suffix in MEMBER_CHANNEL_SUFFIXES
+            }
+            axial = np.abs(values["FKZe"]) / resistance.compression_n
+            bending = np.hypot(values["MKXe"], values["MKYe"]) / resistance.bending_nm
+            interaction = axial + bending
+            shear = np.hypot(values["FKXe"], values["FKYe"]) / resistance.shear_n
+            torsion = np.abs(values["MKZe"]) / resistance.torsion_nm
+            utilization = np.maximum.reduce([interaction, shear, torsion])
+            peak = int(np.argmax(utilization))
+            mode_values = {
+                "axial_bending_interaction": float(interaction[peak]),
+                "shear": float(shear[peak]),
+                "torsion": float(torsion[peak]),
+            }
+            governing_mode = max(mode_values, key=mode_values.get)
+            rows.append(
+                {
+                    "member_alias": alias,
+                    "member_id": int(member["member_id"]),
+                    "member_group": str(member["group"]),
+                    "member_end": node,
+                    "diameter_m": diameter,
+                    "thickness_m": thickness,
+                    "member_length_m": length,
+                    "governing_time_s": float(time_values[peak]),
+                    "shear_x_n": float(values["FKXe"][peak]),
+                    "shear_y_n": float(values["FKYe"][peak]),
+                    "axial_force_n": float(values["FKZe"][peak]),
+                    "bending_x_nm": float(values["MKXe"][peak]),
+                    "bending_y_nm": float(values["MKYe"][peak]),
+                    "torsional_moment_nm": float(values["MKZe"][peak]),
+                    "compression_resistance_n": float(resistance.compression_n),
+                    "bending_resistance_nm": float(resistance.bending_nm),
+                    "shear_resistance_n": float(resistance.shear_n),
+                    "torsion_resistance_nm": float(resistance.torsion_nm),
+                    "axial_utilization": float(axial[peak]),
+                    "bending_utilization": float(bending[peak]),
+                    "interaction_utilization": float(interaction[peak]),
+                    "shear_utilization": float(shear[peak]),
+                    "torsion_utilization": float(torsion[peak]),
+                    "governing_utilization": float(utilization[peak]),
+                    "governing_mode": governing_mode,
+                }
+            )
+    return rows
 
 
 def sha256(path: Path) -> str:
@@ -155,6 +290,8 @@ def prepare_case(row: dict, workspace: Path, tmax: float = 660.0) -> Path:
     modify_member_properties(case_dir / "NRELOffshrBsline5MW_OC4Jacket_SubDyn.dat", design, hydro=False)
     subdyn = (case_dir / "NRELOffshrBsline5MW_OC4Jacket_SubDyn.dat").read_text(encoding="utf-8")
     subdyn = replace_labeled_value(subdyn, "SumPrint", "False")
+    if bool(row.get("dcr_outputs", False)):
+        subdyn = configure_dcr_member_outputs(subdyn)
     (case_dir / "NRELOffshrBsline5MW_OC4Jacket_SubDyn.dat").write_text(subdyn, encoding="utf-8")
     modify_member_properties(case_dir / "NRELOffshrBsline5MW_OC4Jacket_HydroDyn.dat", design, hydro=True)
     return case_dir
@@ -209,6 +346,17 @@ def analyze(case_dir: Path, row: dict, elapsed: float, return_code: int) -> dict
         metrics = five_responses(names, data, mask)
         for name, value in metrics.items():
             result[f"{name}_{key}"] = value
+    if bool(row.get("dcr_outputs", False)):
+        production_mask = windows["W3_600_60_660"]
+        design = {column: float(row[column]) for column in DESIGN_COLUMNS}
+        member_demands = extract_dcr_member_demands(names, data, production_mask, design)
+        result["member_demands_W3_600_60_660"] = member_demands
+        governing = max(member_demands, key=lambda record: record["governing_utilization"])
+        result["max_member_utilization_W3_600_60_660"] = governing["governing_utilization"]
+        result["governing_member_alias_W3_600_60_660"] = governing["member_alias"]
+        result["governing_member_group_W3_600_60_660"] = governing["member_group"]
+        result["governing_member_end_W3_600_60_660"] = governing["member_end"]
+        result["governing_member_mode_W3_600_60_660"] = governing["governing_mode"]
     return result
 
 
