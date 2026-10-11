@@ -16,7 +16,7 @@ independent of the experiment numbers used in the manuscript.
 | `FC-5_reliability_model_metrics.csv` | Cross-validation and independent-holdout metrics for the three metamodel development stages. | 48 |
 | `FC-6_optimization_runs.csv` | All optimization runs from the three reconstruction stages and the safety-factor sensitivity campaign. `selected_candidate=True` marks the candidate chosen from each method/campaign. | 514 |
 | `FC-7_final_design_verification.csv` | Independent verification of the selected design at eight representative environmental-envelope conditions and three wave seeds per condition. | 24 |
-|                                      |                                                              |       |
+| `FC-8.csv` | Demand--capacity audit. It combines 1,224 direct 600 s response records, 200 component-level member checks, and a conservative force-envelope reassessment of all 514 recorded optimization candidates. | 1,938 |
 
 ## Data flow
 
@@ -24,7 +24,8 @@ independent of the experiment numbers used in the manuscript.
 response-surrogate evidence obtained from that basis. `FC-3` supplies the environmental
 sample, while `FC-4` and `FC-5` document reliability-metamodel construction and testing.
 `FC-6` records the optimization campaigns, `FC-7` independently verifies the selected
-design, and `FC-8` provides a compact trace from the released data to the manuscript tables.
+design, and `FC-8` verifies that the reported mass-reduction result remains feasible after
+introducing a design-dependent representative-member demand--capacity constraint.
 
 ## Conventions
 
@@ -41,3 +42,12 @@ design, and `FC-8` provides a compact trace from the released data to the manusc
   corners of the environmental hypercube.
 - Intermediate version-specific extracts and one-table-per-method files are intentionally
   omitted because their information is consolidated in the FC tables above.
+- In `FC-8`, the direct and component-validation rows retain the observed 600 s demand.
+  The optimization-candidate rows apply the largest tracked-member force observed across
+  the completed 600 s campaigns to every candidate. This common demand envelope is a
+  deliberately conservative reassessment: reductions in hydrodynamic attraction are not
+  credited, while the tubular-member resistance changes with each candidate's diameter
+  and thickness. `dcr_feasible` denotes a demand--capacity ratio not exceeding one.
+- The component-level check in `FC-8` is a representative-member strength screen rather
+  than full jacket certification; fatigue, local shell buckling, joints, foundations and
+  soil--structure interaction remain outside its scope.
