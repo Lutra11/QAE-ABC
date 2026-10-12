@@ -18,9 +18,10 @@ This repository packages the computational code, **13 experiment entry points**,
 | Main environmental record | North Sea, 54.0 degrees N / 6.5 degrees E, 2000–2024 |
 | Environmental sample size | 219,168 hourly rows; 218,136 complete-core records |
 | Observation cross-check | NDBC 44025, 2014–2023; 81,459 time-paired rows, not colocated with the North Sea site |
-| Engineering response samples | 5,000 LF cases and 400 short-window HF cases |
-| Reliability metamodel | 1,500 designs evaluated over 8,192 historical environments each |
-| Final dynamic checks | Four selected designs x three wave seeds; 12 runs of 600 s |
+| Engineering response samples | 5,000 LF cases and 1,200 successful 600 s HF runs (20 design–environment cells × 60 wave seeds) |
+| High-fidelity solver | [OpenFAST 5.0.0](https://github.com/OpenFAST/openfast) — official repository, [release v5.0.0](https://github.com/OpenFAST/openfast/releases/tag/v5.0.0) |
+| Reliability metamodel | 4,137 development designs plus 828 independent holdout designs; labels evaluated over 8,192 environmental samples per design ([FC-4](data/supplement/MF600s/)) |
+| Final dynamic checks | 24 independent 600 s verification runs of the selected design (8 envelope conditions × 3 wave seeds), all passing ([FC-7](data/supplement/MF600s/)) |
 | Quantum evidence | Scalar-amplitude simulations, ideal functional circuits, calibrated-noise simulations and compiled resources |
 | Hardware status | No real-QPU execution is claimed |
 | Selected-design outcome | 537.13 t (−20.29% vs the 673.88 t original OC4), independently re-evaluated P_f,out = 1.331×10⁻³ (β_out ≈ 3.0) |
@@ -28,7 +29,7 @@ This repository packages the computational code, **13 experiment entry points**,
 | Supplement packages | [Five self-contained packages](#supplement-packages) under `data/supplement/` |
 | Manuscript figures | [Figure 1–13 index](#manuscript-figures) · [PNG previews](Figures/) · [PDF files](Figures/pdf/) |
 | Packaged tests | 32 computational tests pass in this snapshot; see [Reproduction](#reproduction) |
-| Research data | [Dataset guide](datasets/DATASET.md) · [Fixed Google Drive download](https://drive.google.com/drive/folders/1Md0APmG8a8DiTAL7MSG1-5Nc7lLaEEDF) |
+| Research data | [Dataset guide](datasets/DATASET.md) · [Zenodo archive, DOI 10.5281/zenodo.23029471](https://doi.org/10.5281/zenodo.23029471) |
 
 ## Research question
 
@@ -126,7 +127,7 @@ Headline results, each linked to its packaged table:
 
 The functional-circuit experiment constructs and executes a **42-logical-qubit** circuit using ideal Aer matrix-product-state simulation, with 100 repetitions and an actual query budget of 8,192. This supports circuit-level simulation evidence, not a real-device demonstration. The separate OC4 functional-oracle study reports approximation and compilation behavior; its engineering acceptance must be assessed independently of whether the circuit was successfully built.
 
-The 400 HF cases are **10 s screening runs**. The final 12 cases run for 600 s, with the first 120 s excluded from response analysis. These are limited dynamic checks—not a complete fatigue, design-load-case or certification campaign. See the [600 s response means](data/Table12.csv) and the [out-of-time assessment](data/Table13.csv).
+Under the revised MF600s protocol, all high-fidelity simulations use [OpenFAST 5.0.0](https://github.com/OpenFAST/openfast) ([release v5.0.0](https://github.com/OpenFAST/openfast/releases/tag/v5.0.0)) with a 60 s initialization interval and a 600 s production window, [60, 660] s, for response extraction. The response basis is 1,200 successful runs from 20 design–environment cells × 60 wave seeds across four structural designs ([FC-2](data/supplement/MF600s/)), and the selected 537.13 t design passed independent verification with 24 additional 600 s runs (8 envelope conditions × 3 wave seeds; [FC-7](data/supplement/MF600s/)). These are limited dynamic checks—not a complete fatigue, design-load-case or certification campaign. See the [600 s response means](data/Table12.csv) and the [out-of-time assessment](data/Table13.csv).
 
 ## Manuscript figures
 
@@ -173,10 +174,10 @@ The [`Figures/`](Figures/) directory follows manuscript numbering from **Figure 
 | Truss target reliability index | 3.0 |
 | Truss adaptive query budgets | 512, 2,048, 8,192 |
 | North Sea temporal partition | Fit: 2000–2019; temporal evaluation: 2020–2024 |
-| OC4 response evaluation | 340 training cases and 60 frozen holdout cases |
-| OC4 reliability evaluation | 1,200 training designs and 300 holdout designs |
+| OC4 response evaluation | 1,200-run MF600s basis; leave-one-cell-out and full evaluation ([Table 5](data/Table5.csv)) |
+| OC4 reliability evaluation | 4,137 development designs and 828 holdout designs ([Table 6](data/Table6.csv)) |
 
-These settings belong to different experimental layers; there is no single interchangeable budget for every experiment. Consult [configs/](experiments/configs/) and the relevant script for its precise protocol. The 1,500 x 8,192 design-environment combinations are surrogate evaluations, not that many OpenFAST runs.
+These settings belong to different experimental layers; there is no single interchangeable budget for every experiment. Consult [configs/](experiments/configs/) and the relevant script for its precise protocol. The 4,137 × 8,192 design–environment combinations of the revised reliability chain ([FC-4](data/supplement/MF600s/)) are surrogate evaluations, not that many OpenFAST runs.
 
 ### Main experiment entry points
 
@@ -233,15 +234,15 @@ QAE-ABC/
 
 ### Research data
 
-[Download the datasets from Google Drive](https://drive.google.com/drive/folders/1Md0APmG8a8DiTAL7MSG1-5Nc7lLaEEDF)
-
-The fixed folder link is provided by the project owner. It is a distribution location, not an immutable version or DOI; remote access permissions and file parity have not been verified. The local research datasets are also included in this repository.
+The research datasets are archived on Zenodo with the persistent DOI [10.5281/zenodo.23029471](https://doi.org/10.5281/zenodo.23029471) (CC-BY-4.0). The Zenodo record lists the archive files (DATASET.md and dataset.zip) together with their MD5 checksums. The same dataset snapshot is included in this repository under `datasets/`, so the packaged code and tests run without downloading the archive.
 
 The [dataset guide](datasets/DATASET.md) documents all 18 Parquet files, variable definitions, stored-versus-valid row counts, alias files, temporal/design splits and five read-only Python examples. In particular:
 
+The notes below describe the retained original screening-era snapshot under `datasets/`. The revised-manuscript response, reliability and verification numbers come from the 600 s full chain in [`data/supplement/MF600s/`](data/supplement/MF600s/) and the transcribed tables [`data/Table4.csv`](data/Table4.csv) to [`data/Table16.csv`](data/Table16.csv).
+
 - Truss records share designs; keep all realizations of a design in the same split.
 - The 400-case OC4 table already includes the initial 300 and added 100 cases; do not concatenate them twice.
-- Reliability holdout tables have 1,500 indexed rows but only 300 non-null predictions per held-out prediction column.
+- `datasets/` retains the original screening-era parquet snapshot; its reliability holdout tables carry 1,500 indexed rows but only 300 non-null predictions per held-out prediction column. The revised-manuscript reliability chain uses 4,137 development designs plus an 828-design independent holdout ([FC-4](data/supplement/MF600s/)).
 - NDBC checks are not colocated validation of the North Sea engineering environment.
 - Frozen response-holdout IDs and some calibration artifacts remain in the original project rather than this dataset directory.
 

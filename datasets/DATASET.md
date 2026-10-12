@@ -4,17 +4,14 @@ This directory contains the data used to connect metocean characterization, stru
 
 ## 1. Download and installation
 
-**Fixed dataset download link:** [Download the QAE-ABC datasets from Google Drive](https://drive.google.com/drive/folders/1Md0APmG8a8DiTAL7MSG1-5Nc7lLaEEDF)
+The dataset snapshot in this directory is also archived on Zenodo with the persistent DOI [10.5281/zenodo.23029471](https://doi.org/10.5281/zenodo.23029471) (CC-BY-4.0). The Zenodo record lists the archive files (DATASET.md and dataset.zip) and their MD5 checksums. The full content is already committed to this repository, so downloading the archive is not required to run the packaged code and tests.
 
-This is the project owner's designated Google Drive folder, not a direct single-file download URL.
+To use this directory directly, clone the repository; no extra download is needed:
 
-1. Open the link and download the dataset files or folder using Google Drive.
-2. If Drive creates a ZIP archive, extract it.
-3. Place the extracted contents under `git-content/datasets/`, keeping `raw/`, `processed/`, `Truss10/`, and `OC4/` at the level shown below.
-4. Avoid an accidental extra level such as `datasets/datasets/OC4/`.
-5. Run the loading and validation examples in Section 6.
-
-If Drive requests access, use the access-request option or contact the folder owner. Access permissions and the remote file inventory were not verified during this documentation update. The inventory and counts below were checked against the **local dataset snapshot on 2026-09-07**; they are not a checksum certification of the remote folder.
+```bash
+git clone https://github.com/Lutra11/QAE-ABC.git
+```
+After cloning, keep `raw/`, `processed/`, `Truss10/`, and `OC4/` at the level shown below, avoid an accidental extra level such as `datasets/datasets/OC4/`, and run the loading and validation examples in Section 6. The inventory and counts below were checked against the **local dataset snapshot on 2026-09-07**; the Zenodo archive provides the persistent, checksummed copy of the same snapshot.
 
 ## 2. Dataset overview
 
@@ -24,9 +21,9 @@ If Drive requests access, use the access-request option or contact the folder ow
 | North Sea environment | Reanalysis at 54.0 degrees N, 6.5 degrees E, 2000–2024 | 219,168 hourly rows; 218,136 complete-core rows | Fit environmental distributions and provide engineering inputs |
 | Observation-validation data | NDBC 44025 and reanalysis near 40.258 degrees N, 73.175 degrees W, 2014–2023 | 87,648 reanalysis rows; 81,459 buoy rows and paired rows | Check preprocessing and distribution agreement |
 | 10-bar truss | Finite-element DOE with four grouped cross-sectional areas and three uncertain inputs | 800 designs x 10 realizations = 8,000 rows | Surrogate training, validation and structural transfer |
-| OC4 response data | Low-fidelity approximations and coupled OpenFAST screening simulations | 5,000 LF cases; 300 initial + 100 active-learning HF cases | Multifidelity response modeling |
-| OC4 reliability labels | Response-surrogate evaluation over sampled historical environments | 1,500 designs; 8,192 environmental samples per design | Design-level reliability metamodeling |
-| OC4 final dynamic checks | Four selected designs x three wave seeds | 12 runs of 600 s | Limited post-optimization dynamic validation |
+| OC4 response data | Low-fidelity approximations and coupled OpenFAST screening simulations ([OpenFAST 5.0.0](https://github.com/OpenFAST/openfast)) | 5,000 LF cases; 300 initial + 100 active-learning HF cases (original screening snapshot); the revised MF600s response basis adds 1,200 successful 600 s runs | Multifidelity response modeling |
+| OC4 reliability labels | Response-surrogate evaluation over sampled historical environments | Original screening snapshot: 1,500 designs; revised chain: 4,137 development + 828 holdout designs (`data/supplement/MF600s/FC-4.csv`); 8,192 environmental samples per design | Design-level reliability metamodeling |
+| OC4 final dynamic checks | Selected design verified at eight envelope conditions x three wave seeds | 24 independent 600 s runs, all passing (`data/supplement/MF600s/FC-7.csv`) | Post-optimization dynamic verification |
 
 There are **18 Parquet files** in this snapshot. Two pairs are byte-identical aliases; several other files intentionally overlap, such as the combined 400-case HF table and its 300/100-case components. Do not sum every file's row count to estimate the number of independent experiments.
 
