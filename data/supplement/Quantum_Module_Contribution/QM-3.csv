@@ -1,0 +1,4 @@
+Configuration,Oracle-query budget,Probability RMSE,Decision agreement (%),"Feasible mass (t), mean ± SD",Median reference P_out,Feasible runs
+Meta-reference ABC (w/o QAE),—,0.0,100.0,543.81 ± 9.29,0.0012028213751868,16/30
+MC-ABC (QAE replaced by MC),"B = [2,048, 8,192] (6,042 consumed)",0.0034,98.4,548.90 ± 7.73,0.0001751681614349,30/30
+NA-QAE-ABC (full),"B = [2,048, 8,192] (3,778 consumed)",0.0014,99.7,546.98 ± 8.47,0.0002218796711509,25/30
