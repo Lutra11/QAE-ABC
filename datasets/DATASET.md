@@ -30,7 +30,7 @@ If Drive requests access, use the access-request option or contact the folder ow
 
 There are **18 Parquet files** in this snapshot. Two pairs are byte-identical aliases; several other files intentionally overlap, such as the combined 400-case HF table and its 300/100-case components. Do not sum every file's row count to estimate the number of independent experiments.
 
-Input and sample data belong here. Aggregated experimental tables are in [data/](../data/), figures in [images/](../images/README.md), and serialized models in [algorithm/models](../algorithm/README.md).
+Input and sample data belong here. Aggregated experimental tables are in [data/](../data/), figures in [Figures/](../Figures/), and serialized models in [algorithm/models](../algorithm/README.md).
 
 ## 3. Directory structure
 

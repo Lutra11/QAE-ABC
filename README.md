@@ -2,11 +2,11 @@
 
 ### Quantum amplitude estimation-assisted reliability-constrained optimization of offshore wind turbine jackets
 
-[Method](#method-at-a-glance) · [Results](#experimental-evidence) · [Figures](#manuscript-figures) · [Experiments](#experimental-design) · [Data](#datasets-and-result-workbooks) · [Reproduction](#reproduction) · [Structure](#repository-structure)
+[Method](#method-at-a-glance) · [Results](#experimental-evidence) · [Figures](#manuscript-figures) · [Experiments](#experimental-design) · [Data](#datasets-tables-and-supplements) · [Reproduction](#reproduction) · [Structure](#repository-structure)
 
 QAE-ABC connects historical wind and wave records, multi-fidelity structural-response models, quantum amplitude estimation (QAE), and artificial bee colony (ABC) search for reliability-constrained offshore jacket design. Probability intervals guide candidate ranking and adaptive query allocation. Analytic benchmarks, reversible quantum circuits, a 10-bar truss, and the OC4 jacket connect estimator behavior to structural optimization and independent design assessment.
 
-This repository provides the computational package, **13 main experiment entry points**, **four fitted model bundles**, **18 Parquet datasets**, **28 curated result workbooks**, and **14 manuscript figures in PNG and PDF formats**. Raw environmental download caches and additional research figures are also included. The engineering optimization loop uses scalar-probability amplitude simulation; separate functional-circuit experiments assess the quantum implementation. Short-window response screening is followed by selected-design dynamic assessment.
+This repository packages the computational code, **13 experiment entry points**, **four fitted model bundles**, **18 Parquet datasets**, **13 main result tables** (`Table4.csv` through `Table16.csv`, transcribed cell-for-cell from the revised manuscript), **five supplement data packages** (37 CSV files under `data/supplement/`), and **13 manuscript figures** (PNG + PDF). Raw environmental download caches are also included. The engineering optimization loop uses scalar-probability amplitude simulation; separate functional-circuit experiments assess the quantum implementation.
 
 ## At a glance
 
@@ -23,7 +23,11 @@ This repository provides the computational package, **13 main experiment entry p
 | Final dynamic checks | Four selected designs x three wave seeds; 12 runs of 600 s |
 | Quantum evidence | Scalar-amplitude simulations, ideal functional circuits, calibrated-noise simulations and compiled resources |
 | Hardware status | No real-QPU execution is claimed |
-| Manuscript figures | [Figure 1–14 index](#manuscript-figures) · [PNG previews](Figures/) · [PDF files](Figures/pdf/) |
+| Selected-design outcome | 537.13 t (−20.29% vs the 673.88 t original OC4), independently re-evaluated P_f,out = 1.331×10⁻³ (β_out ≈ 3.0) |
+| Main result tables | 13 CSV files, [Table 4–16](#main-result-tables), values from the revised manuscript |
+| Supplement packages | [Five self-contained packages](#supplement-packages) under `data/supplement/` |
+| Manuscript figures | [Figure 1–13 index](#manuscript-figures) · [PNG previews](Figures/) · [PDF files](Figures/pdf/) |
+| Packaged tests | 32 computational tests pass in this snapshot; see [Reproduction](#reproduction) |
 | Research data | [Dataset guide](datasets/DATASET.md) · [Fixed Google Drive download](https://drive.google.com/drive/folders/1Md0APmG8a8DiTAL7MSG1-5Nc7lLaEEDF) |
 
 ## Research question
@@ -71,7 +75,7 @@ Core implementations are in [optimization/abc.py](algorithm/qae_abc/optimization
 
 ## Experimental evidence
 
-The previews below use the manuscript figure set in [`Figures/`](Figures/). Click a preview to open its corresponding PDF; the [complete figure index](#manuscript-figures) includes all 14 PNG/PDF pairs.
+The previews below use the manuscript figure set in [`Figures/`](Figures/). Click a preview to open its corresponding PDF; the [complete figure index](#manuscript-figures) includes all 13 PNG/PDF pairs.
 
 ### Probability estimation and structural decisions
 
@@ -88,7 +92,7 @@ The previews below use the manuscript figure set in [`Figures/`](Figures/). Clic
 
 The analytic and nonlinear studies compare estimation rather than assuming that an asymptotic query argument guarantees practical advantage. The truss comparisons and ablations then test whether estimator behavior translates into sound design selection. Confidence treatment and endpoint refinement are distinct contributors, so the repository retains their separate evidence.
 
-See the [paired truss comparisons](data/Table8.csv) and [ABC parameter-sensitivity results](data/Table9.csv).
+See the [paired comparisons with Holm-adjusted p-values](data/Table8.csv), the [ABC parameter-sensitivity results](data/Table9.csv), and the [probability-module ablation](data/Table11.csv). The module ablation (Meta-reference / MC / NA-QAE under matched surrogate, seeds, and budgets) is a classical-simulation result and **not a demonstration of quantum-hardware advantage**; its process files are packaged in [`data/supplement/Quantum_Module_Contribution/`](data/supplement/Quantum_Module_Contribution/README.md).
 
 ### Engineering response and design assessment
 
@@ -111,11 +115,18 @@ See the [paired truss comparisons](data/Table8.csv) and [ABC parameter-sensitivi
 </tr>
 </table>
 
+Headline results, each linked to its packaged table:
+
+- The frozen NA-QAE-ABC chain reaches **537.13 t** (−20.29% against the 673.88 t original OC4) with independently re-evaluated P_f,out = 1.331×10⁻³ ([Table 14](data/Table14.csv)); all 24 direct 600 s checks of the selected design pass the demand-to-capacity screen ([Table 15](data/Table15.csv)).
+- Over 30 paired seeds the five ABC configurations span 543.81–552.70 t mean mass; NA-QAE-ABC uses 4.78×10⁶ median queries versus 9.09×10⁶ for MC-ABC—a 47% reduction ([Table 7](data/Table7.csv)).
+- Response surrogates reach holdout R² 0.86–0.97 across Y1–Y5 ([Table 5](data/Table5.csv)); the design-level reliability metamodel reaches holdout R² 0.919 and 0.947 for its two targets ([Table 6](data/Table6.csv)).
+- Foundation flexibility erodes fixed-base feasibility: stiff/reference/soft supports push β_out to −0.44/−1.10/−1.73 and return 0/30 feasible reoptimization runs ([Table 10](data/Table10.csv), supplement [Foundation_Flexibility](data/supplement/Foundation_Flexibility/README.md)).
+- Multi-site recalibration (NDBC 44025 / 41025 / 46026) returns 30/30 feasible runs per site ([Table 16](data/Table16.csv), supplement [Multi-Site_Value](data/supplement/Multi-Site_Value/)).
+- Cross-platform OpenFAST regression passes 76/76 channels on Linux ATLAS with a maximum relative L2 error of 0.0061 ([Table 4](data/Table4.csv), supplement [OpenFAST_Value](data/supplement/OpenFAST_Value/)).
+
 The functional-circuit experiment constructs and executes a **42-logical-qubit** circuit using ideal Aer matrix-product-state simulation, with 100 repetitions and an actual query budget of 8,192. This supports circuit-level simulation evidence, not a real-device demonstration. The separate OC4 functional-oracle study reports approximation and compilation behavior; its engineering acceptance must be assessed independently of whether the circuit was successfully built.
 
-The 400 HF cases are **10 s screening runs**. The final 12 cases run for 600 s, with the first 120 s excluded from response analysis. These are limited dynamic checks—not a complete fatigue, design-load-case or certification campaign.
-
-See [functional-circuit results](data/Table6.csv), [calibrated-noise results](data/Table7.csv), [OC4 oracle resources](data/Table4.csv), [surrogate results](data/Table5.csv), [OC4 optimization](data/Table11.csv), and [dynamic validation](data/Table13.csv).
+The 400 HF cases are **10 s screening runs**. The final 12 cases run for 600 s, with the first 120 s excluded from response analysis. These are limited dynamic checks—not a complete fatigue, design-load-case or certification campaign. See the [600 s response means](data/Table12.csv) and the [out-of-time assessment](data/Table13.csv).
 
 ## Manuscript figures
 
@@ -136,8 +147,6 @@ The [`Figures/`](Figures/) directory follows manuscript numbering from **Figure 
 | 11 | Algorithm-component effects and exact endpoint correction | [PNG](Figures/Figure11.png) | [PDF](Figures/pdf/Figure11.pdf) |
 | 12 | Search-parameter sensitivity and estimation effects on design selection | [PNG](Figures/Figure12.png) | [PDF](Figures/pdf/Figure12.pdf) |
 | 13 | Estimator performance across the six representative OC4 designs (600 s chain) | [PNG](Figures/Figure13.png) | [PDF](Figures/pdf/Figure13.pdf) |
-
-The existing [`images/`](images/README.md) collection retains additional experiment plots and earlier figure layouts. Its `Fig-*` filenames use a separate numbering scheme; use the index above when matching figures to the manuscript.
 
 ## Experimental design
 
@@ -209,22 +218,18 @@ QAE-ABC/
 │   ├── OC4/            # Engineering samples and reliability labels
 │   └── DATASET.md
 ├── data/
-│   ├── Table*.csv     # 13 manuscript tables (Table 4–16), values from the revised LaTeX
-│   └── supplement/     # Five supplement packages (MF600s, Multi-Site_Value, OpenFAST_Value, Foundation_Flexibility, Quantum_Module_Contribution)
+│   ├── Table4.csv … Table16.csv   # 13 main result tables (revised-manuscript values)
+│   └── supplement/     # Five packages: MF600s, Multi-Site_Value, OpenFAST_Value,
+│                       #   Foundation_Flexibility, Quantum_Module_Contribution
 ├── Figures/
 │   ├── Figure*.png     # 13 manuscript figures for browser previews
 │   └── pdf/            # Matching Figure1.pdf through Figure13.pdf
-├── images/
-│   ├── png/            # Additional plots and earlier figure layouts
-│   ├── pdf/            # Corresponding existing PDF figures
-│   ├── supplement/     # Additional figures
-│   └── README.md
 ├── requirements.txt
 ├── .gitignore
 └── README.md
 ```
 
-## Datasets and result workbooks
+## Datasets, tables and supplements
 
 ### Research data
 
@@ -240,18 +245,37 @@ The [dataset guide](datasets/DATASET.md) documents all 18 Parquet files, variabl
 - NDBC checks are not colocated validation of the North Sea engineering environment.
 - Frozen response-holdout IDs and some calibration artifacts remain in the original project rather than this dataset directory.
 
-### Result workbooks
+### Main result tables
 
-The [data/](data/) directory contains **15 main tables** and [supplement/](data/supplement/) contains **13 supplementary tables**. Each workbook has one worksheet, English headers and white cell backgrounds. Values, missing cells and numeric formatting are preserved.
+The [`data/`](data/) directory contains **13 CSV tables**, `Table4.csv` through `Table16.csv`, transcribed from the revised manuscript. Each file has a single header row and English column names; values match the revised LaTeX tables cell for cell, so the CSVs and the paper can be cross-checked directly.
 
-| Number group | Contents |
+| Table | Contents |
 | --- | --- |
-| 4-1-1 to 4-1-3 | Environmental distributions, dependence and observations |
-| 4-3-1-1 to 4-3-1-2 | Analytic and nonlinear estimation |
-| 4-3-2-1 to 4-3-2-3 | Functional circuits, calibrated noise and OC4 oracle resources |
-| 4-3-3-1 to 4-3-3-2 | Truss comparison and ablation |
-| 4-3-4-1 to 4-3-4-5 | OC4 surrogates, reliability, optimization, estimation and dynamic checks |
-| S1–S5 | Supplementary convergence, statistics, resources, sensitivity and validation |
+| [Table 4](data/Table4.csv) | OpenFAST cross-platform regression checks (four platform/compiler builds) |
+| [Table 5](data/Table5.csv) | Response-surrogate holdout metrics for Y1–Y5 |
+| [Table 6](data/Table6.csv) | Reliability-metamodel holdout metrics |
+| [Table 7](data/Table7.csv) | OC4 optimization endpoints: original jacket plus five ABC variants over 30 paired seeds |
+| [Table 8](data/Table8.csv) | Paired mass differences with Holm-adjusted p-values |
+| [Table 9](data/Table9.csv) | ABC hyperparameter sensitivity |
+| [Table 10](data/Table10.csv) | Foundation-flexibility sensitivity (fixed / stiff / reference / soft supports) |
+| [Table 11](data/Table11.csv) | Probability-estimation module ablation (Meta-reference / MC / NA-QAE) |
+| [Table 12](data/Table12.csv) | 600 s response means for the selected designs (Y1, Y2, Y4) |
+| [Table 13](data/Table13.csv) | Out-of-time response assessment (Y3, Y5) |
+| [Table 14](data/Table14.csv) | Six-design optimization endpoints with independent re-evaluation |
+| [Table 15](data/Table15.csv) | Member demand-to-capacity checks for selected designs |
+| [Table 16](data/Table16.csv) | Multi-site recalibration and transfer (NDBC 44025 / 41025 / 46026) |
+
+### Supplement packages
+
+[`data/supplement/`](data/supplement/README.md) contains **five self-contained packages**, each with its own `README.md` documenting scope, files, units, and the analytical flow. Short data-file names (`FC-*`, `MS-*`, `FF-*`, `QM-*`) follow the package conventions.
+
+| Package | Contents |
+| --- | --- |
+| [MF600s](data/supplement/MF600s/README.md) | Full-chain reconstruction on 600 s simulations: surrogate fitting, reliability labels, optimization, and validation (`FC-1` … `FC-8`) |
+| [Multi-Site_Value](data/supplement/Multi-Site_Value/) | Site-specific recalibration and out-of-time (2020–2023) validation for NDBC 44025 / 41025 / 46026 (`MS-1` … `MS-15`) |
+| [OpenFAST_Value](data/supplement/OpenFAST_Value/) | OpenFAST model inputs plus four platform/compiler result tables for cross-platform numerical checks |
+| [Foundation_Flexibility](data/supplement/Foundation_Flexibility/README.md) | 1,200 paired 10 s simulations (400 designs x 3 flexible supports), 24 x 600 s validation runs, and 30 reoptimization runs per support (`FF-1` … `FF-5`) |
+| [Quantum_Module_Contribution](data/supplement/Quantum_Module_Contribution/README.md) | The probability-module ablation behind [Table 11](data/Table11.csv) under matched surrogate, ABC, seeds, budgets, and noise-free final re-evaluation (`QM-1` … `QM-5`) |
 
 ### Saved models
 
@@ -294,38 +318,57 @@ The requirements list covers the research Python stack; it is not a version lock
 
 ## Reproduction
 
-Run commands from the repository root.
+Run all commands from the repository root, with `PYTHONPATH` pointing to `algorithm/` as shown under [Installation](#installation). The steps below verify, in order: the packaged code and data, the computational tests, the headline numbers, and the supplement-package evidence. Each step states the expected output so the verification can be checked, not just run.
 
-### 1. Inspect the packaged code and data
+### 1. Verify the packaged code and data
 
 ```bash
 python -c "import qae_abc; print(qae_abc.__file__)"
 python -c "import pandas as pd; d = pd.read_parquet('datasets/Truss10/truss_doe_full.parquet'); print(d.groupby('split').size())"
 ```
 
-The second command should report 5,600 training, 1,190 validation and 1,210 test rows. Follow [DATASET.md](datasets/DATASET.md) for the environmental, engineering and reliability examples.
+Expected output: the first command prints the `qae_abc` package path; the second reports **5,600 training, 1,190 validation and 1,210 test rows**. Follow [DATASET.md](datasets/DATASET.md) for the environmental, engineering and reliability examples, including split-handling rules that a reproduction must respect.
 
-### 2. Check the computational tests
+### 2. Run the computational tests
 
 ```bash
-python -m pytest experiments/tests -q -p no:cacheprovider
+python -m pytest experiments/tests -q -p no:cacheprovider --ignore=experiments/tests/test_oc4.py
 ```
 
-The earlier local verification passed 35 tests with shared helper modules and the original OpenFAST SubDyn model available. Those helpers are no longer included in this publication snapshot: OC4 test collection and some experiment imports require them to be restored or explicitly provided from the original project. The historical pass is not a claim that a fresh clone passes the full suite.
+Expected result: **32 passed**. `test_oc4.py` imports helper modules (for example `qae_abc.reliability.foundation` and the OpenFAST DOE drivers) that were retained in the original project workspace and are not part of this snapshot, so it is excluded from the packaged run. A historical full-suite pass on the original workspace is not a claim that a fresh clone passes every test.
 
-### 3. Inspect a main experiment
+### 3. Inspect a main experiment entry point
 
 ```bash
 python experiments/source/E1-analytic.py --help
 ```
 
-Interfaces differ between scripts. Some entry points have no argument parser and can start computation even when passed `--help`; inspect their code before invoking them. E13 analyzes and writes summaries of existing validation runs rather than launching a new campaign.
+Interfaces differ between scripts. Some entry points have no argument parser and can start computation even when passed `--help`; inspect the code before invoking it. E13 analyzes and writes summaries of existing 600 s validation runs rather than launching a new campaign.
 
-### 4. Restore the original runtime contract before formal reruns
+### 4. Reproduce the headline numbers from the packaged tables
 
-The retained implementations preserve historical input/output defaults designed for the original `src/data/results/external` project. This reorganized package is **not an out-of-the-box reconstruction of that complete workspace**. Formal reproduction requires the missing shared helper modules (including `run_openfast_oc4_doe` and `run_oc4_low_fidelity_doe`), frozen case IDs, capacities, calibration/model metadata, external tools and path configuration.
+```bash
+python -c "import pandas as pd; print(pd.read_csv('data/Table14.csv').to_string(index=False))"
+python -c "import pandas as pd; print(pd.read_csv('data/Table7.csv').to_string(index=False))"
+```
 
-Use an isolated workspace, explicitly map current model filenames to the required inputs, and write new results separately from the curated workbooks. Do not reinterpret a newly chosen split or a smoke run as reproduction of the reported experiment.
+Expected: Table 14 reports the frozen NA-QAE-ABC chain at **537.13 t** (ΔM = 20.29% against the 673.88 t original OC4), P_f,out = 1.331×10⁻³, Feasible = Yes; Table 7 reports the optimization endpoints over 30 paired seeds, with NA-QAE-ABC at 546.98 ± 8.47 t, 83.3% feasible runs, and 4.78×10⁶ median queries versus 9.09×10⁶ for MC-ABC (a 47% reduction). The remaining tables are indexed in [Main result tables](#main-result-tables); every value is transcribed from the revised manuscript, so CSVs and paper can be cross-checked cell by cell.
+
+### 5. Work through a supplement package
+
+Each package under [`data/supplement/`](data/supplement/README.md) is a self-contained release; start from its `README.md`:
+
+- [MF600s](data/supplement/MF600s/README.md) — the full 600 s chain from surrogate fitting to validation, in analytical order (`FC-1` → `FC-8`).
+- [Foundation_Flexibility](data/supplement/Foundation_Flexibility/README.md) — paired support-stiffness simulations, 600 s validation, and per-support reoptimization (`FF-1` … `FF-5`).
+- [Quantum_Module_Contribution](data/supplement/Quantum_Module_Contribution/README.md) — the module-ablation process files behind [Table 11](data/Table11.csv). Classical simulation; **not a demonstration of quantum-hardware advantage**.
+- [Multi-Site_Value](data/supplement/Multi-Site_Value/) — recalibration inputs and out-of-time validation for the three NDBC sites behind [Table 16](data/Table16.csv).
+- [OpenFAST_Value](data/supplement/OpenFAST_Value/) — OpenFAST model inputs plus the four platform result tables behind [Table 4](data/Table4.csv), for cross-platform numerical comparison.
+
+### 6. Observe the runtime contract before formal reruns
+
+The retained implementations preserve historical input/output defaults designed for the original `src/data/results/external` project. This package is **not an out-of-the-box reconstruction of that complete workspace**. Formal reproduction of the full campaign additionally requires the missing shared helper modules (including `run_openfast_oc4_doe` and `run_oc4_low_fidelity_doe`), frozen case IDs, capacities, calibration/model metadata, external tools and path configuration.
+
+Use an isolated workspace, explicitly map current model filenames to the required inputs, and write new results separately from the curated tables. Do not reinterpret a newly chosen split or a smoke run as reproduction of the reported experiment.
 
 ## License
 
