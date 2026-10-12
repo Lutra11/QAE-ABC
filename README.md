@@ -1,6 +1,6 @@
 # QAE-ABC
 
-### Quantum amplitude estimation-assisted reliability-constrained optimization of offshore wind turbine jackets
+### QAE-ABC: Quantum amplitude estimation-assisted reliability-constrained member sizing for fixed-base offshore wind turbine jackets
 
 [Method](#method-at-a-glance) · [Results](#experimental-evidence) · [Figures](#manuscript-figures) · [Experiments](#experimental-design) · [Data](#datasets-tables-and-supplements) · [Reproduction](#reproduction) · [Structure](#repository-structure)
 
