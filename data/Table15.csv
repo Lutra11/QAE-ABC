@@ -1,0 +1,6 @@
+﻿Assessment,Cases/designs,Maximum DCR,Feasible (DCR)
+"Original OC4, direct 600 s runs",480,0.0345,480/480
+"Selected NA-QAE-ABC, direct 600 s runs",24,0.0336,24/24
+Component-level check of member 6,200,0.0204,200/200
+"Selected NA-QAE-ABC, force envelope",1,0.0618,1/1
+"All optimization records, force envelope",514,0.0780,514/514

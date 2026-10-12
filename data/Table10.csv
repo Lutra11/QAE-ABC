@@ -1,0 +1,5 @@
+﻿Support case,lambda_K,"Fixed-base P_f,out",Fixed-base beta_out,M (t) mean±SD,"Median P_f,out",Feasible runs
+Fixed,inf,1.331e-3,3.004,546.98±8.47,2.219e-4,25/30
+Stiff,2.0,0.672,-0.444,698.08±25.06,0.611,0/30
+Reference,1.0,0.865,-1.102,589.63±23.31,0.865,0/30
+Soft,0.5,0.958,-1.732,615.01±25.36,0.970,0/30

@@ -1,0 +1,4 @@
+﻿Config,N_O,RMSE_P,D_agr (%),M (t) mean±SD,"Median P_E,out",Feasible runs
+Meta-reference ABC,---,0,100.0,543.81±9.29,1.20e-3,16/30
+MC-ABC,6042,0.0034,98.4,548.90±7.73,1.75e-4,30/30
+NA-QAE-ABC (full),3778,0.0014,99.7,546.98±8.47,2.22e-4,25/30

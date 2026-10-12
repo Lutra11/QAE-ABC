@@ -1,0 +1,9 @@
+﻿Case,Comparator,Paired mass difference (kg),Holm-adjusted p,Feasibility difference (pp)
+OC4,Meta-reference ABC,+3170.774,0.158,+30.0
+OC4,MC-ABC,-1920.355,0.375,-16.7
+OC4,QMC-amplitude ABC,-5721.741,0.131,-16.7
+OC4,NA-QAE-DE,-3378.020,0.474,-10.0
+Truss,FORM-ABC,+236.664,2.42e-5,0.0
+Truss,QMC-ABC,-78.958,3.89e-5,0.0
+Truss,QAE-DE,-188.036,3.06e-5,0.0
+Truss,QAE-CMA-ES,-549.525,5.78e-6,0.0

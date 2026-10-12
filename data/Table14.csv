@@ -1,0 +1,7 @@
+﻿Source,M (t),Delta_M (%),p_meta,"P_f,out",beta_out,Feasible
+Original OC4,673.88,0.00,1.907e-3,1.892e-3,2.896,No
+Meta-reference ABC,540.29,19.82,1.331e-3,1.214e-3,3.032,Yes
+MC-ABC,537.45,20.25,3.662e-4,9.342e-4,3.110,Yes
+QMC-amplitude ABC,543.66,19.32,4.883e-4,4.671e-4,3.310,Yes
+NA-QAE-ABC,537.13,20.29,1.140e-3,1.331e-3,3.000,Yes
+NA-QAE-DE,539.14,19.99,9.581e-4,4.671e-4,3.310,Yes

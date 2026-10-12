@@ -1,0 +1,7 @@
+﻿Method,M (t) mean±SD,F_out (%),Queries (10^6) median,Time (s) median
+Original OC4,673.88,0.0,0.00,0.0
+Meta-reference ABC,543.81±9.29,53.3,0.00,43.2
+MC-ABC,548.90±7.73,100.0,9.09,44.9
+QMC-amplitude ABC,552.70±8.07,100.0,9.10,45.5
+NA-QAE-ABC,546.98±8.47,83.3,4.78,56.4
+NA-QAE-DE,550.36±9.47,93.3,3.50,53.7

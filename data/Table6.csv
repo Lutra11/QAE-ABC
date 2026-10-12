@@ -1,0 +1,3 @@
+﻿Target,Selected model,Holdout n,R^2,RMSE,NRMSE,FS (%)
+z_p,ExtraTrees,828,0.9190,1.518,0.285,0.85
+Q_q(R_sys),HGBR,828,0.9474,0.057,0.229,1.93

@@ -1,0 +1,4 @@
+﻿Design,<Y3> (kN),<Y5> (deg),t_case (h) median
+Original OC4,2284.9,0.0455,1.95
+NA-QAE-ABC (previous),1431.5,0.0467,2.04
+NA-QAE-ABC (selected),1448.1,0.0505,2.05

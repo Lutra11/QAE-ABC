@@ -1,0 +1,5 @@
+﻿Platform,Compiler and library,Passed channels,Maximum relative L2 error,Maximum limit ratio
+Windows,Intel Fortran,65/76,0.2889,0.9453
+Windows,GNU Fortran 16,73/76,0.0332,0.9300
+Linux,GNU Fortran 13 + OpenBLAS,72/76,0.0602,0.9301
+Linux,GNU Fortran 14 + ATLAS,76/76,0.0061,0.9300

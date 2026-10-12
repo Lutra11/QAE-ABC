@@ -88,7 +88,7 @@ The previews below use the manuscript figure set in [`Figures/`](Figures/). Clic
 
 The analytic and nonlinear studies compare estimation rather than assuming that an asymptotic query argument guarantees practical advantage. The truss comparisons and ablations then test whether estimator behavior translates into sound design selection. Confidence treatment and endpoint refinement are distinct contributors, so the repository retains their separate evidence.
 
-See the [analytic table](data/4-3-1-1.xlsx), [nonlinear table](data/4-3-1-2.xlsx), [truss comparison](data/4-3-3-1.xlsx), and [ablation table](data/4-3-3-2.xlsx).
+See the [paired truss comparisons](data/Table8.csv) and [ABC parameter-sensitivity results](data/Table9.csv).
 
 ### Engineering response and design assessment
 
@@ -115,7 +115,7 @@ The functional-circuit experiment constructs and executes a **42-logical-qubit**
 
 The 400 HF cases are **10 s screening runs**. The final 12 cases run for 600 s, with the first 120 s excluded from response analysis. These are limited dynamic checks—not a complete fatigue, design-load-case or certification campaign.
 
-See [functional-circuit results](data/4-3-2-1.xlsx), [calibrated-noise results](data/4-3-2-2.xlsx), [OC4 oracle resources](data/4-3-2-3.xlsx), [surrogate results](data/4-3-4-1.xlsx), [OC4 optimization](data/4-3-4-3.xlsx), and [dynamic validation](data/4-3-4-5.xlsx).
+See [functional-circuit results](data/Table6.csv), [calibrated-noise results](data/Table7.csv), [OC4 oracle resources](data/Table4.csv), [surrogate results](data/Table5.csv), [OC4 optimization](data/Table11.csv), and [dynamic validation](data/Table13.csv).
 
 ## Manuscript figures
 
@@ -210,8 +210,8 @@ QAE-ABC/
 │   ├── OC4/            # Engineering samples and reliability labels
 │   └── DATASET.md
 ├── data/
-│   ├── 4-*.xlsx        # 15 main-result workbooks
-│   └── supplement/     # 13 supplementary workbooks
+│   ├── Table*.csv     # 13 manuscript tables (Table 4–16), values from the revised LaTeX
+│   └── supplement/     # Five supplement packages (MF600s, Multi-Site_Value, OpenFAST_Value, Foundation_Flexibility, Quantum_Module_Contribution)
 ├── Figures/
 │   ├── Figure*.png     # 14 manuscript figures for browser previews
 │   └── pdf/            # Matching Figure1.pdf through Figure14.pdf
