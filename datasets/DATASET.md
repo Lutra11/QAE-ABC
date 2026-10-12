@@ -293,12 +293,12 @@ Use geometry as design-level predictors and the appropriate reliability quantity
 ## 7. Scope, limitations and provenance
 
 - NDBC 44025 is near Long Island, New York, **not colocated with the North Sea engineering site**. Its comparison supports processing/distribution checks, not local validation of North Sea weather.
-- The 400 HF cases are **10 s screening runs**. Their DEL values do not establish certification-level fatigue performance.
-- The 12 runs of 600 s are limited dynamic spot checks, not all design load cases or a complete certification campaign.
-- The 1,500 x 8,192 combinations are **surrogate evaluations**, not 12,288,000 OpenFAST runs. Their probabilities describe modeled system-response exceedance under the study's operating-environment and calibrated-capacity definitions, not directly measured annual physical failure probabilities.
+- The original 400-HF screening snapshot used 10 s runs; the revised MF600s chain retrained on 1,200 successful 600 s runs (see `data/supplement/MF600s/`). Their DEL values do not establish certification-level fatigue performance.
+- The revised 24 independent 600 s verification runs of the selected design (8 envelope conditions x 3 wave seeds) are limited dynamic spot checks, not all design load cases or a complete certification campaign.
+- The design-environment combinations (original snapshot 1,500 x 8,192; revised chain 4,137 x 8,192 plus 828 x 8,192 holdout) are **surrogate evaluations**, not that many OpenFAST runs. Their probabilities describe modeled system-response exceedance under the study's operating-environment and calibrated-capacity definitions, not directly measured annual physical failure probabilities.
 - This directory contains tabular samples and response summaries, not all raw OpenFAST time histories, executable binaries, frozen split manifests, capacity reports or calibration artifacts.
 - The scripts under [experiments/](../experiments/README.md) expect the original project's runtime layout. Reading these datasets works independently; rerunning the entire study requires the original inputs, tools, configuration and path contract.
 - Raw caches preserve downloaded source material. Check source-specific attribution and redistribution terms before public release. This document does not assign a new license to third-party data.
-- The Google Drive folder is a distribution location, not a DOI or immutable version identifier. For a publication release, record the downloaded version/date and file hashes; do not assume unchanged contents solely because the folder URL is fixed.
+- The Zenodo archive (DOI 10.5281/zenodo.23029471, CC-BY-4.0) provides the persistent, checksummed copy of this snapshot; the repository content is identical, so no separate download is required.
 
 All counts and examples above describe the retained local snapshot. This documentation update does not modify, regenerate or upload any dataset.
