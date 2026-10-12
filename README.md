@@ -95,19 +95,19 @@ See the [paired truss comparisons](data/Table8.csv) and [ABC parameter-sensitivi
 <table>
 <tr>
 <td width="50%"><a href="Figures/pdf/Figure6.pdf"><img src="Figures/Figure6.png" alt="Figure 6 — Agreement between response-surrogate predictions and OpenFAST results" width="100%"></a></td>
-<td width="50%"><a href="Figures/pdf/Figure14.pdf"><img src="Figures/Figure14.png" alt="Figure 14 — Optimized OC4 mass and selected-design dynamic response changes" width="100%"></a></td>
+<td width="50%"><a href="Figures/pdf/Figure9.pdf"><img src="Figures/Figure9.png" alt="Figure 9 — Combined optimization results across the truss benchmark, algorithm components, and the OC4 jacket case" width="100%"></a></td>
 </tr>
 <tr>
 <td><strong>Figure 6 · Response models.</strong> Predictions are compared with OpenFAST for each structural-response quantity.</td>
-<td><strong>Figure 14 · Engineering outcomes.</strong> Optimization mass and selected-design response changes connect lightweight design to dynamic assessment.</td>
+<td><strong>Figure 9 · Optimization results.</strong> Truss benchmark, component effects, and the revised 600 s OC4 optimization endpoints are summarized together.</td>
 </tr>
 <tr>
 <td width="50%"><a href="Figures/pdf/Figure12.pdf"><img src="Figures/Figure12.png" alt="Figure 12 — Search-parameter effects and probability-estimation error in design selection" width="100%"></a></td>
-<td width="50%"><a href="Figures/pdf/Figure13.pdf"><img src="Figures/Figure13.png" alt="Figure 13 — Probability-estimator error and interval coverage for representative OC4 designs" width="100%"></a></td>
+<td width="50%"><a href="Figures/pdf/Figure13.pdf"><img src="Figures/Figure13.png" alt="Figure 13 — Probability-estimator error and interval coverage for representative OC4 designs (600 s chain)" width="100%"></a></td>
 </tr>
 <tr>
 <td><strong>Figure 12 · Design selection.</strong> Search settings and estimation error are examined for their effects on structural decisions.</td>
-<td><strong>Figure 13 · Jacket probability estimates.</strong> Relative error and interval coverage are compared across representative designs.</td>
+<td><strong>Figure 13 · Jacket probability estimates.</strong> Relative error and interval coverage are compared across the six representative designs of the revised 600 s chain.</td>
 </tr>
 </table>
 
@@ -119,7 +119,7 @@ See [functional-circuit results](data/Table6.csv), [calibrated-noise results](da
 
 ## Manuscript figures
 
-The [`Figures/`](Figures/) directory follows manuscript numbering from **Figure 1 to Figure 14**. PNG files provide browser previews; the matching files in [`Figures/pdf/`](Figures/pdf/) are available for publication and LaTeX use. Each row below links both formats of the same figure.
+The [`Figures/`](Figures/) directory follows manuscript numbering from **Figure 1 to Figure 13**. PNG files provide browser previews; the matching files in [`Figures/pdf/`](Figures/pdf/) are available for publication and LaTeX use. Each row below links both formats of the same figure.
 
 | Figure | Contents | PNG | PDF |
 | --- | --- | --- | --- |
@@ -135,8 +135,7 @@ The [`Figures/`](Figures/) directory follows manuscript numbering from **Figure 
 | 10 | Truss endpoint mass and exact feasibility across twelve configurations | [PNG](Figures/Figure10.png) | [PDF](Figures/pdf/Figure10.pdf) |
 | 11 | Algorithm-component effects and exact endpoint correction | [PNG](Figures/Figure11.png) | [PDF](Figures/pdf/Figure11.pdf) |
 | 12 | Search-parameter sensitivity and estimation effects on design selection | [PNG](Figures/Figure12.png) | [PDF](Figures/pdf/Figure12.pdf) |
-| 13 | Estimator error and interval coverage for representative jacket designs | [PNG](Figures/Figure13.png) | [PDF](Figures/pdf/Figure13.pdf) |
-| 14 | Optimized jacket mass and longer-duration response changes | [PNG](Figures/Figure14.png) | [PDF](Figures/pdf/Figure14.pdf) |
+| 13 | Estimator performance across the six representative OC4 designs (600 s chain) | [PNG](Figures/Figure13.png) | [PDF](Figures/pdf/Figure13.pdf) |
 
 The existing [`images/`](images/README.md) collection retains additional experiment plots and earlier figure layouts. Its `Fig-*` filenames use a separate numbering scheme; use the index above when matching figures to the manuscript.
 
@@ -213,8 +212,8 @@ QAE-ABC/
 │   ├── Table*.csv     # 13 manuscript tables (Table 4–16), values from the revised LaTeX
 │   └── supplement/     # Five supplement packages (MF600s, Multi-Site_Value, OpenFAST_Value, Foundation_Flexibility, Quantum_Module_Contribution)
 ├── Figures/
-│   ├── Figure*.png     # 14 manuscript figures for browser previews
-│   └── pdf/            # Matching Figure1.pdf through Figure14.pdf
+│   ├── Figure*.png     # 13 manuscript figures for browser previews
+│   └── pdf/            # Matching Figure1.pdf through Figure13.pdf
 ├── images/
 │   ├── png/            # Additional plots and earlier figure layouts
 │   ├── pdf/            # Corresponding existing PDF figures
