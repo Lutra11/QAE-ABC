@@ -6,7 +6,7 @@
 
 QAE-ABC connects historical wind and wave records, multi-fidelity structural-response models, quantum amplitude estimation (QAE), and artificial bee colony (ABC) search for reliability-constrained offshore jacket design. Probability intervals guide candidate ranking and adaptive query allocation. Analytic benchmarks, reversible quantum circuits, a 10-bar truss, and the OC4 jacket connect estimator behavior to structural optimization and independent design assessment.
 
-This repository packages the computational code, **13 experiment entry points**, **four fitted model bundles**, **18 Parquet datasets**, **13 main result tables** (`Table4.csv` through `Table16.csv`, transcribed cell-for-cell from the revised manuscript), **five supplement data packages** (37 CSV files under `data/supplement/`), and **13 manuscript figures** (PNG + PDF). Raw environmental download caches are also included. The engineering optimization loop uses scalar-probability amplitude simulation; separate functional-circuit experiments assess the quantum implementation.
+This repository packages the computational code, **13 experiment entry points**, **four fitted model bundles**, **18 Parquet datasets**, **13 main result tables** (`Table4.csv` through `Table16.csv`, transcribed cell-for-cell from the revised manuscript), **five supplement data packages** (37 CSV files under `data/supplement/`), and **12 manuscript figures** (PNG + PDF). Raw environmental download caches are also included. The engineering optimization loop uses scalar-probability amplitude simulation; separate functional-circuit experiments assess the quantum implementation.
 
 ## At a glance
 
@@ -27,7 +27,7 @@ This repository packages the computational code, **13 experiment entry points**,
 | Selected-design outcome | 537.13 t (−20.29% vs the 673.88 t original OC4), independently re-evaluated P_f,out = 1.331×10⁻³ (β_out ≈ 3.0) |
 | Main result tables | 13 CSV files, [Table 4–16](#main-result-tables), values from the revised manuscript |
 | Supplement packages | [Five self-contained packages](#supplement-packages) under `data/supplement/` |
-| Manuscript figures | [Figure 1–13 index](#manuscript-figures) · [PNG previews](Figures/) · [PDF files](Figures/pdf/) |
+| Manuscript figures | [Figure 1–12 index](#manuscript-figures) · [PNG previews](Figures/) · [PDF files](Figures/pdf/) |
 | Packaged tests | 32 computational tests pass in this snapshot; see [Reproduction](#reproduction) |
 | Research data | [Dataset guide](datasets/DATASET.md) · [Zenodo archive, DOI 10.5281/zenodo.23029471](https://doi.org/10.5281/zenodo.23029471) |
 
@@ -76,18 +76,18 @@ Core implementations are in [optimization/abc.py](algorithm/qae_abc/optimization
 
 ## Experimental evidence
 
-The previews below use the manuscript figure set in [`Figures/`](Figures/). Click a preview to open its corresponding PDF; the [complete figure index](#manuscript-figures) includes all 13 PNG/PDF pairs.
+The previews below use the manuscript figure set in [`Figures/`](Figures/). Click a preview to open its corresponding PDF; the [complete figure index](#manuscript-figures) includes all 12 PNG/PDF pairs.
 
 ### Probability estimation and structural decisions
 
 <table>
 <tr>
-<td width="50%"><a href="Figures/pdf/Figure7.pdf"><img src="Figures/Figure7.png" alt="Figure 7 — Probability-estimation error versus query budget and simulated noise" width="100%"></a></td>
-<td width="50%"><a href="Figures/pdf/Figure10.pdf"><img src="Figures/Figure10.png" alt="Figure 10 — Truss endpoint mass and exact feasibility across twelve configurations" width="100%"></a></td>
+<td width="50%"><a href="Figures/pdf/Figure6.pdf"><img src="Figures/Figure6.png" alt="Figure 6 — Probability-estimation convergence and simulated-noise comparisons" width="100%"></a></td>
+<td width="50%"><a href="Figures/pdf/Figure9.pdf"><img src="Figures/Figure9.png" alt="Figure 9 — Truss endpoint mass and exact feasibility across twelve configurations" width="100%"></a></td>
 </tr>
 <tr>
-<td><strong>Figure 7 · Probability estimation.</strong> Query-budget convergence and simulated-noise comparisons characterize estimation accuracy.</td>
-<td><strong>Figure 10 · Truss optimization.</strong> Endpoint mass is assessed together with exact feasibility across twelve algorithm configurations.</td>
+<td><strong>Figure 6 · Probability estimation.</strong> Query-budget convergence and simulated-noise comparisons characterize estimation accuracy.</td>
+<td><strong>Figure 9 · Truss optimization.</strong> Endpoint mass is assessed together with exact feasibility across twelve algorithm configurations.</td>
 </tr>
 </table>
 
@@ -99,20 +99,20 @@ See the [paired comparisons with Holm-adjusted p-values](data/Table8.csv), the [
 
 <table>
 <tr>
-<td width="50%"><a href="Figures/pdf/Figure6.pdf"><img src="Figures/Figure6.png" alt="Figure 6 — Agreement between response-surrogate predictions and OpenFAST results" width="100%"></a></td>
-<td width="50%"><a href="Figures/pdf/Figure9.pdf"><img src="Figures/Figure9.png" alt="Figure 9 — Combined optimization results across the truss benchmark, algorithm components, and the OC4 jacket case" width="100%"></a></td>
+<td width="50%"><a href="Figures/pdf/Figure5.pdf"><img src="Figures/Figure5.png" alt="Figure 5 — Agreement between response-surrogate predictions and OpenFAST results" width="100%"></a></td>
+<td width="50%"><a href="Figures/pdf/Figure8.pdf"><img src="Figures/Figure8.png" alt="Figure 8 — Combined optimization results across the truss benchmark, algorithm components, and the OC4 jacket case" width="100%"></a></td>
 </tr>
 <tr>
-<td><strong>Figure 6 · Response models.</strong> Predictions are compared with OpenFAST for each structural-response quantity.</td>
-<td><strong>Figure 9 · Optimization results.</strong> Truss benchmark, component effects, and the revised 600 s OC4 optimization endpoints are summarized together.</td>
+<td><strong>Figure 5 · Response models.</strong> Predictions are compared with OpenFAST for each structural-response quantity.</td>
+<td><strong>Figure 8 · Optimization results.</strong> Truss benchmark, component effects, and the revised 600 s OC4 optimization endpoints are summarized together.</td>
 </tr>
 <tr>
-<td width="50%"><a href="Figures/pdf/Figure12.pdf"><img src="Figures/Figure12.png" alt="Figure 12 — Search-parameter effects and probability-estimation error in design selection" width="100%"></a></td>
-<td width="50%"><a href="Figures/pdf/Figure13.pdf"><img src="Figures/Figure13.png" alt="Figure 13 — Probability-estimator error and interval coverage for representative OC4 designs (600 s chain)" width="100%"></a></td>
+<td width="50%"><a href="Figures/pdf/Figure11.pdf"><img src="Figures/Figure11.png" alt="Figure 11 — Search-parameter effects and probability-estimation error in design selection" width="100%"></a></td>
+<td width="50%"><a href="Figures/pdf/Figure12.pdf"><img src="Figures/Figure12.png" alt="Figure 12 — Probability-estimator error and interval coverage for representative OC4 designs (600 s chain)" width="100%"></a></td>
 </tr>
 <tr>
-<td><strong>Figure 12 · Design selection.</strong> Search settings and estimation error are examined for their effects on structural decisions.</td>
-<td><strong>Figure 13 · Jacket probability estimates.</strong> Relative error and interval coverage are compared across the six representative designs of the revised 600 s chain.</td>
+<td><strong>Figure 11 · Design selection.</strong> Search settings and estimation error are examined for their effects on structural decisions.</td>
+<td><strong>Figure 12 · Jacket probability estimates.</strong> Relative error and interval coverage are compared across the six representative designs of the revised 600 s chain.</td>
 </tr>
 </table>
 
@@ -131,7 +131,7 @@ Under the revised MF600s protocol, all high-fidelity simulations use [OpenFAST 5
 
 ## Manuscript figures
 
-The [`Figures/`](Figures/) directory follows manuscript numbering from **Figure 1 to Figure 13**. PNG files provide browser previews; the matching files in [`Figures/pdf/`](Figures/pdf/) are available for publication and LaTeX use. Each row below links both formats of the same figure.
+The [`Figures/`](Figures/) directory follows manuscript numbering from **Figure 1 to Figure 12**. PNG files provide browser previews; the matching files in [`Figures/pdf/`](Figures/pdf/) are available for publication and LaTeX use. Each row below links both formats of the same figure.
 
 | Figure | Contents | PNG | PDF |
 | --- | --- | --- | --- |
@@ -139,15 +139,14 @@ The [`Figures/`](Figures/) directory follows manuscript numbering from **Figure 
 | 2 | Engineering evaluation and QAE-ABC optimization framework | [PNG](Figures/Figure2-Framework.png) | [PDF](Figures/pdf/Figure2.pdf) |
 | 3 | Scalar-probability amplitude estimation in the engineering optimization loop | [PNG](Figures/Figure3-QAE-ABC.png) | [PDF](Figures/pdf/Figure3.pdf) |
 | 4 | Historical wind–wave distributions, dependence and upper-tail quantiles | [PNG](Figures/Figure4-Dataset.png) | [PDF](Figures/pdf/Figure4.pdf) |
-| 5 | Cross-platform channel comparison with the OpenFAST reference | [PNG](Figures/Figure5.png) | [PDF](Figures/pdf/Figure5.pdf) |
-| 6 | Response-surrogate predictions compared with OpenFAST results | [PNG](Figures/Figure6.png) | [PDF](Figures/pdf/Figure6.pdf) |
-| 7 | Probability-estimation convergence and simulated-noise comparisons | [PNG](Figures/Figure7.png) | [PDF](Figures/pdf/Figure7.pdf) |
-| 8 | Estimation error versus query budget at four probability scales | [PNG](Figures/Figure8.png) | [PDF](Figures/pdf/Figure8.pdf) |
-| 9 | Jacket optimization, truss comparisons and algorithm ablations | [PNG](Figures/Figure9.png) | [PDF](Figures/pdf/Figure9.pdf) |
-| 10 | Truss endpoint mass and exact feasibility across twelve configurations | [PNG](Figures/Figure10.png) | [PDF](Figures/pdf/Figure10.pdf) |
-| 11 | Algorithm-component effects and exact endpoint correction | [PNG](Figures/Figure11.png) | [PDF](Figures/pdf/Figure11.pdf) |
-| 12 | Search-parameter sensitivity and estimation effects on design selection | [PNG](Figures/Figure12.png) | [PDF](Figures/pdf/Figure12.pdf) |
-| 13 | Estimator performance across the six representative OC4 designs (600 s chain) | [PNG](Figures/Figure13.png) | [PDF](Figures/pdf/Figure13.pdf) |
+| 5 | Response-surrogate predictions compared with OpenFAST results | [PNG](Figures/Figure5.png) | [PDF](Figures/pdf/Figure5.pdf) |
+| 6 | Probability-estimation convergence and simulated-noise comparisons | [PNG](Figures/Figure6.png) | [PDF](Figures/pdf/Figure6.pdf) |
+| 7 | Estimation error versus query budget at four probability scales | [PNG](Figures/Figure7.png) | [PDF](Figures/pdf/Figure7.pdf) |
+| 8 | Jacket optimization, truss comparisons and algorithm ablations | [PNG](Figures/Figure8.png) | [PDF](Figures/pdf/Figure8.pdf) |
+| 9 | Truss endpoint mass and exact feasibility across twelve configurations | [PNG](Figures/Figure9.png) | [PDF](Figures/pdf/Figure9.pdf) |
+| 10 | Algorithm-component effects and exact endpoint correction | [PNG](Figures/Figure10.png) | [PDF](Figures/pdf/Figure10.pdf) |
+| 11 | Search-parameter sensitivity and estimation effects on design selection | [PNG](Figures/Figure11.png) | [PDF](Figures/pdf/Figure11.pdf) |
+| 12 | Estimator performance across the six representative OC4 designs (600 s chain) | [PNG](Figures/Figure12.png) | [PDF](Figures/pdf/Figure12.pdf) |
 
 ## Experimental design
 
@@ -223,8 +222,8 @@ QAE-ABC/
 │   └── supplement/     # Five packages: MF600s, Multi-Site_Value, OpenFAST_Value,
 │                       #   Foundation_Flexibility, Quantum_Module_Contribution
 ├── Figures/
-│   ├── Figure*.png     # 13 manuscript figures for browser previews
-│   └── pdf/            # Matching Figure1.pdf through Figure13.pdf
+│   ├── Figure*.png     # 12 manuscript figures for browser previews
+│   └── pdf/            # Matching Figure1.pdf through Figure12.pdf
 ├── requirements.txt
 ├── .gitignore
 └── README.md
