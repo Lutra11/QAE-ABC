@@ -6,7 +6,7 @@
 | --- | --- |
 | optimization/abc.py | Bee-colony search, candidate caching, and confidence-aware ranking |
 | quantum/likelihood.py | Amplitude counts, likelihood estimation, noise fitting, and intervals |
-| quantum/functional_oracle.py | Functional reversible failure Oracle |
+| quantum/functional_oracle.py | Functional reversible threshold oracle |
 | reliability/ | Analytic, nonlinear, and OC4 reliability models |
 | structural/truss.py | 10-bar truss finite elements |
 | surrogate/ | Truss surrogates |

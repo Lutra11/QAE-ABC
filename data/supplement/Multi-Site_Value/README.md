@@ -13,7 +13,7 @@ This directory records the inputs, calibration evidence, intermediate data, and 
 | `MS-3.csv` | 24 | Independent ERA5–NDBC validation metrics for the three target sites, including uncorrected and quantile-mapped results. |
 | `MS-4.csv` | 15 | Five fixed response limits inherited from the source site and baseline structural reliability results for each target site. |
 | `MS-5.csv` | 24,576 | The 8,192 environmental samples used for reliability evaluation at each target site. |
-| `MS-6.csv` | 3,000 | Member dimensions, structural mass, failure counts, and reliability responses for 1,000 designs at each site. |
+| `MS-6.csv` | 3,000 | Member dimensions, structural mass, exceedance counts (stored as the `failure_count` column), and reliability responses for 1,000 designs at each site. |
 | `MS-7.csv` | 48 | Cross-validation and independent-holdout metrics for the candidate reliability surrogate models. |
 | `MS-8.csv` | 600 | Predictions for 200 independent holdout designs at each target site. |
 | `MS-9.csv` | 3 | Model selection, holdout residuals, conservative threshold factors, and the 30-run optimization configuration. |
@@ -48,7 +48,7 @@ MS-4 source-site fixed response limits -> reliability evaluations at all three t
 - Each design is evaluated using 8,192 site-specific environmental samples.
 - QAE–ABC is run independently 30 times at each target site, giving 90 optimization runs in total. Each run uses a distinct random seed. The seeds are reported in `MS-10.csv` and `MS-11.csv`.
 - The period 2014–2019 is used for fitting. The 2020–2023 out-of-time data are evaluated only after optimization and are not used to fit the reliability surrogate or search for candidate designs.
-- Optimization uses the conservative probability threshold obtained from independent-holdout residuals in `MS-9.csv`. Final feasibility is evaluated on the out-of-time data using the nominal target failure probability of `0.001349898031630093`, corresponding to `beta = 3`.
+- Optimization uses the conservative probability threshold obtained from independent-holdout residuals in `MS-9.csv`. Final feasibility is evaluated on the out-of-time data using the nominal target exceedance probability of `0.001349898031630093`, corresponding to `beta = 3`. (`failure_count` is the literal stored column name and counts surrogate-evaluated system response exceedances.)
 - NDBC observations provide an independent check of the environmental inputs. The quantile-mapping results in `MS-3.csv` are diagnostic only. All structural calculations use uncorrected ERA5/Open-Meteo data to maintain a consistent input definition across sites.
 
 ## Conventions and units

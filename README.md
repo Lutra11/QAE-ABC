@@ -4,7 +4,7 @@
 
 [Method](#method-at-a-glance) · [Results](#experimental-evidence) · [Figures](#manuscript-figures) · [Experiments](#experimental-design) · [Data](#datasets-tables-and-supplements) · [Reproduction](#reproduction) · [Structure](#repository-structure)
 
-QAE-ABC connects historical wind and wave records, multi-fidelity structural-response models, quantum amplitude estimation (QAE), and artificial bee colony (ABC) search for reliability-constrained offshore jacket design. Probability intervals guide candidate ranking and adaptive query allocation. Analytic benchmarks, reversible quantum circuits, a 10-bar truss, and the OC4 jacket connect estimator behavior to structural optimization and independent design assessment.
+QAE-ABC connects historical wind and wave records, multi-fidelity structural-response models, quantum amplitude estimation (QAE), and artificial bee colony (ABC) search for reliability-constrained member sizing of fixed-base offshore wind turbine jackets. Probability intervals guide candidate ranking and adaptive query allocation. Analytic benchmarks, reversible quantum circuits, a 10-bar truss, and the OC4 jacket connect estimator behavior to structural optimization and independent design assessment.
 
 This repository packages the computational code, **13 experiment entry points**, **four fitted model bundles**, **18 Parquet datasets**, **13 main result tables** (`Table4.csv` through `Table16.csv`, transcribed cell-for-cell from the revised manuscript), **five supplement data packages** (37 CSV files under `data/supplement/`), and **12 manuscript figures** (PNG + PDF). Raw environmental download caches are also included. The engineering optimization loop uses scalar-probability amplitude simulation; separate functional-circuit experiments assess the quantum implementation.
 
@@ -12,7 +12,7 @@ This repository packages the computational code, **13 experiment entry points**,
 
 | Item | Study configuration |
 | --- | --- |
-| Primary task | Minimize structural mass under a modeled failure-probability constraint |
+| Primary task | Minimize structural mass under a modeled system response-exceedance constraint |
 | Structural benchmark | 10-bar truss with four cross-sectional-area groups |
 | Engineering case | OC4 bottom-fixed jacket, with four diameter/thickness groups and eight design variables |
 | Main environmental record | North Sea, 54.0 degrees N / 6.5 degrees E, 2000–2024 |
@@ -33,13 +33,13 @@ This repository packages the computational code, **13 experiment entry points**,
 
 ## Research question
 
-A probability estimator can have a small average error while still producing unreliable decisions near a feasibility boundary. During optimization, repeated selection can amplify optimistic estimation errors: an apparently lightweight design may be selected because its failure probability was underestimated.
+A probability estimator can have a small average error while still producing unreliable decisions near a feasibility boundary. During optimization, repeated selection can amplify optimistic estimation errors: an apparently lightweight design may be selected because its exceedance probability was underestimated.
 
 The study examines the following proposition:
 
 > Probability-estimation accuracy should be evaluated together with interval coverage, selection behavior, and independently checked design feasibility—not only as a stand-alone RMSE improvement.
 
-The evidence follows four connected questions: how estimators behave under controlled probabilities, whether the quantum components implement the intended failure logic, how estimation errors affect structural search, and what changes when the workflow is transferred to surrogate-assisted offshore engineering.
+The evidence follows four connected questions: how estimators behave under controlled probabilities, whether the quantum components implement the intended event logic, how estimation errors affect structural search, and what changes when the workflow is transferred to surrogate-assisted offshore engineering.
 
 ## Method at a glance
 
@@ -221,6 +221,8 @@ QAE-ABC/
 │   ├── Table4.csv … Table16.csv   # 13 main result tables (revised-manuscript values)
 │   └── supplement/     # Five packages: MF600s, Multi-Site_Value, OpenFAST_Value,
 │                       #   Foundation_Flexibility, Quantum_Module_Contribution
+├── campaign600/      # 600 s OpenFAST campaign: batch definitions, orchestrator,
+│                    #   per-shard provenance and result files
 ├── Figures/
 │   ├── Figure*.png     # 12 manuscript figures for browser previews
 │   └── pdf/            # Matching Figure1.pdf through Figure12.pdf
