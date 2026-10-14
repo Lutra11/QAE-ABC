@@ -1,6 +1,6 @@
 # QAE-ABC Datasets
 
-This directory contains the data used to connect metocean characterization, structural response modeling, and reliability-constrained optimization in QAE-ABC. It is a collection of related datasets, not a single independent benchmark table.
+This directory contains the data used for metocean characterization, structural response modeling, and reliability-constrained optimization in QAE-ABC. The Parquet files preserve the September 2026 snapshot. The revised manuscript uses the October MF600s data under [data/supplement/](../data/supplement/), not the earlier 10 s screening data.
 
 ## 1. Download and installation
 
@@ -8,9 +8,10 @@ To use this directory directly, clone the repository; no extra download is neede
 
 ```bash
 git clone https://github.com/Lutra11/QAE-ABC.git
+cd QAE-ABC
 ```
 
-After cloning, keep `raw/`, `processed/`, `Truss10/`, and `OC4/` at the level shown below, avoid an accidental extra level such as `datasets/datasets/OC4/`, and run the loading and validation examples in Section 6. The 18 Parquet files in this directory are unchanged from the September 2026 snapshot; the revised-chain counts quoted in Section 2 come from the supplement packages under [data/supplement/](../data/supplement/).
+Run the examples in Section 6 from the directory containing `datasets/`. Keep `raw/`, `processed/`, `Truss10/`, and `OC4/` under `datasets/`, as shown below.
 
 ### 1.1 Archive and version identifiers
 
@@ -19,15 +20,15 @@ The dataset snapshot is archived on Zenodo (CC-BY-4.0):
 - Concept DOI (resolves to the latest version): [10.5281/zenodo.23029471](https://doi.org/10.5281/zenodo.23029471)
 - Version 1 DOI (published 2026-09-29): [10.5281/zenodo.23029472](https://doi.org/10.5281/zenodo.23029472)
 
-Version 1 contains the September snapshot only (the `datasets/` tables; archive files `DATASET.md` and `dataset.zip` with MD5 checksums) and predates the October supplement packages (`MF600s`, `Multi-Site_Value`, `Foundation_Flexibility`, `Quantum_Module_Contribution`). Its record reflects the earlier screening chain (300 + 100 ten-second high-fidelity cases, 1,500 reliability designs, 12 final validation runs at 4 designs x 3 seeds) and is filed with the resource type "Journal". A replacement Zenodo version is planned that includes the revised data chain (1,200 multi-seed 600 s response runs; 4,137 development + 828 holdout reliability designs; 24 final validation runs at 8 envelope conditions x 3 wave seeds; MF600s revised results, multi-site, foundation-flexibility, and QAE-ablation packages), uses the resource type "Dataset", and is cited in the manuscript by its specific version DOI.
+Zenodo version 1 archives the September snapshot only: 400 short-window OpenFAST cases, 1,500 reliability designs, and 12 validation runs. It does **not** contain the revised MF600s chain (1,200 multi-seed 600 s simulations; 4,137 reliability designs, comprising 3,309 training and 828 independent holdout designs; and 24 final verification runs) or the later supplement packages. These revised files are available in the GitHub repository. A revised Zenodo version is planned; its version-specific DOI should be added once published.
 
-The full content is already committed to the public GitHub repository, so downloading the archive is not required to run the packaged code and tests. The supplement packages are tagged in the GitHub release `supplement-600s` (published 2026-10-08); a release or recorded commit SHA matching the next Zenodo version will accompany it.
+The revised supplement packages are available in the public GitHub repository and the `supplement-600s` release (2026-10-08). The September Zenodo DOI must not be cited as the archive of the revised results.
 
 ### 1.2 Upstream data sources and citable identifiers
 
 | Resource | Citable identifier | Use in this work |
 | --- | --- | --- |
-| QAE-ABC dataset | Concept DOI [10.5281/zenodo.23029471](https://doi.org/10.5281/zenodo.23029471); version 1 DOI [10.5281/zenodo.23029472](https://doi.org/10.5281/zenodo.23029472) | Cite the specific DOI of the updated version in the final manuscript |
+| QAE-ABC dataset | Concept DOI [10.5281/zenodo.23029471](https://doi.org/10.5281/zenodo.23029471); September snapshot [10.5281/zenodo.23029472](https://doi.org/10.5281/zenodo.23029472) | Version 1 covers legacy data only; cite the revised version DOI when available |
 | ERA5 reanalysis dataset | [10.24381/cds.adbb2d47](https://doi.org/10.24381/cds.adbb2d47) | Primary dataset DOI for the environmental data |
 | ERA5 method paper | Hersbach et al. (2020), [10.1002/qj.3803](https://doi.org/10.1002/qj.3803) | Cite together with the dataset DOI |
 | Open-Meteo API | Zippenfenig (2023), [10.5281/zenodo.7970649](https://doi.org/10.5281/zenodo.7970649) | The ERA5 records were retrieved through the Open-Meteo API |
@@ -53,14 +54,14 @@ Notes:
 
 ## 2. Dataset overview
 
-| Component | Source / construction | Size in the local snapshot | Main use |
+| Component | Source / construction | Size / scope | Main use |
 | --- | --- | --- | --- |
 | Raw environmental cache | Open-Meteo reanalysis responses and NDBC station records | 105 compressed JSON files and 11 compressed text files | Trace source downloads and preprocessing |
 | North Sea environment | Reanalysis at 54.0 degrees N, 6.5 degrees E, 2000–2024 | 219,168 hourly rows; 218,136 complete-core rows | Fit environmental distributions and provide engineering inputs |
 | Observation-validation data | NDBC 44025 and reanalysis near 40.258 degrees N, 73.175 degrees W, 2014–2023 | 87,648 reanalysis rows; 81,459 buoy rows and paired rows | Check preprocessing and distribution agreement |
 | 10-bar truss | Finite-element DOE with four grouped cross-sectional areas and three uncertain inputs | 800 designs x 10 realizations = 8,000 rows | Surrogate training, validation and structural transfer |
-| OC4 response data | Low-fidelity approximations and coupled OpenFAST screening simulations ([OpenFAST 5.0.0](https://github.com/OpenFAST/openfast)) | 5,000 LF cases; 300 initial + 100 active-learning HF cases (original screening snapshot); the revised MF600s response basis adds 1,200 successful 600 s runs | Multifidelity response modeling |
-| OC4 reliability labels | Response-surrogate evaluation over sampled historical environments | Original screening snapshot: 1,500 designs; revised chain: 4,137 development + 828 holdout designs (`data/supplement/MF600s/FC-4.csv`); 8,192 environmental samples per design | Design-level reliability metamodeling |
+| OC4 response data | Low-fidelity features and OpenFAST simulations ([OpenFAST 5.0.0](https://github.com/OpenFAST/openfast)) | Legacy: 5,000 LF and 400 short-window HF cases; revised MF600s: 1,200 multi-seed 600 s runs replacing the old HF training basis | Multi-fidelity response modeling |
+| OC4 reliability labels | Response-surrogate evaluation over sampled historical environments | Legacy: 1,500 designs; revised: 4,137 total (3,309 training + 828 independent holdout), 8,192 environmental samples per design ([FC-4.csv](../data/supplement/MF600s/FC-4.csv)) | Design-level reliability metamodeling |
 | OC4 final dynamic checks | Selected design verified at eight envelope conditions x three wave seeds | 24 independent 600 s runs, all passing (`data/supplement/MF600s/FC-7.csv`) | Post-optimization dynamic verification |
 
 There are **18 Parquet files** in this snapshot. Two pairs are byte-identical aliases; several other files intentionally overlap, such as the combined 400-case HF table and its 300/100-case components. Do not sum every file's row count to estimate the number of independent experiments.
@@ -204,6 +205,10 @@ The holdout prediction columns beginning with `logit_probability__` are on the *
 
 ## 5. Splits and leakage prevention
 
+### 5.1 September snapshot (legacy)
+
+The OC4 partitions below refer to the September Parquet files, not the final MF600s experiments.
+
 | Level | Stored / study partition | Required handling |
 | --- | --- | --- |
 | North Sea environment | Fit: 2000–2019, 175,320 rows, all complete; temporal test: 2020–2024, 43,848 rows, 42,816 complete | Filter completeness and retain chronology; do not randomly mix years for temporal evaluation |
@@ -212,16 +217,26 @@ The holdout prediction columns beginning with `logit_probability__` are on the *
 | OC4 reliability metamodel | 1,200 training designs and 300 holdout designs | Recover held-out IDs from non-null holdout predictions and join on `design_id` |
 | Final dynamic validation | 12 separate 600 s runs | Keep separate from the short-window response-training campaign |
 
-The response-surrogate holdout-ID JSON is not included in this dataset directory. Exact reproduction of the reported 60-case split requires that artifact from the original project; inventing a new split is a new evaluation, not reproduction. Deployment models were subsequently refit, so loading a final model bundle alone does not recreate the original held-out evaluation.
+The legacy response-surrogate holdout-ID JSON is not included here; a new random split would not reproduce that evaluation.
+
+### 5.2 MF600s protocol
+
+| Dataset | Size | Partition / analysis |
+| --- | ---: | --- |
+| OpenFAST response campaign | 1,200 runs | 20 design–environment cells × 60 wave seeds; responses from [60, 660] s |
+| Reliability labels | 4,137 designs | 3,309 training + 828 independent design holdout |
+| Environmental probability sample | 8,192 records | Same historical sample for each design |
+| Independent OpenFAST verification | 24 runs | 8 environmental conditions × 3 wave seeds |
+
+The revised data and process files are in [data/supplement/MF600s/](../data/supplement/MF600s/).
 
 ## 6. Usage examples
 
 ### 6.1 Minimal setup and schema inspection
 
-The examples below run from the **`git-content/` directory** and only read data. A minimal Parquet-reading environment needs pandas and pyarrow:
+The following examples read the **legacy September Parquet files only**. Run them from the directory containing `datasets/`. To reproduce the revised MF600s analysis, use [data/supplement/MF600s/](../data/supplement/MF600s/) and its instructions.
 
-```powershell
-Set-Location C:\QAE-ABC\git-content
+```bash
 python -m pip install pandas pyarrow
 ```
 
@@ -233,7 +248,7 @@ import pandas as pd
 import pyarrow.parquet as pq
 
 DATASETS = Path("datasets")
-assert (DATASETS / "DATASET.md").exists(), "Run from git-content/"
+assert (DATASETS / "DATASET.md").exists(), "Run from the directory containing datasets/"
 files = sorted(DATASETS.rglob("*.parquet"))
 assert len(files) == 18, "Inventory differs from the documented local snapshot"
 for path in files:
@@ -305,7 +320,7 @@ assert len(final_runs) == 12 and final_runs["success"].eq(True).all()
 print(final_runs.groupby("source_method").size())
 ```
 
-Use either the combined 400-case table **or** its 300/100-case components, not both. Join DOE and results by `case_id`, with one-to-one validation, rather than by row position. Keep final validation separate; the first 120 s of each 600 s run were excluded from response analysis.
+Use either the legacy 400-case table or its 300/100-case components, not both. Join by `case_id`, not row order. The legacy 12-run validation excluded the first 120 s; the revised 24-run MF600s verification uses the [60, 660] s response window.
 
 ### 6.5 Recover reliability training and holdout designs
 
