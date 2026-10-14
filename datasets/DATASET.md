@@ -4,14 +4,52 @@ This directory contains the data used to connect metocean characterization, stru
 
 ## 1. Download and installation
 
-The dataset snapshot in this directory is also archived on Zenodo with the persistent DOI [10.5281/zenodo.23029471](https://doi.org/10.5281/zenodo.23029471) (CC-BY-4.0). The Zenodo record lists the archive files (DATASET.md and dataset.zip) and their MD5 checksums. The full content is already committed to this repository, so downloading the archive is not required to run the packaged code and tests.
-
 To use this directory directly, clone the repository; no extra download is needed:
 
 ```bash
 git clone https://github.com/Lutra11/QAE-ABC.git
 ```
-After cloning, keep `raw/`, `processed/`, `Truss10/`, and `OC4/` at the level shown below, avoid an accidental extra level such as `datasets/datasets/OC4/`, and run the loading and validation examples in Section 6. The inventory and counts below were checked against the **local dataset snapshot on 2026-09-07**; the Zenodo archive provides the persistent, checksummed copy of the same snapshot.
+
+After cloning, keep `raw/`, `processed/`, `Truss10/`, and `OC4/` at the level shown below, avoid an accidental extra level such as `datasets/datasets/OC4/`, and run the loading and validation examples in Section 6. The 18 Parquet files in this directory are unchanged from the September 2026 snapshot; the revised-chain counts quoted in Section 2 come from the supplement packages under [data/supplement/](../data/supplement/).
+
+### 1.1 Archive and version identifiers
+
+The dataset snapshot is archived on Zenodo (CC-BY-4.0):
+
+- Concept DOI (resolves to the latest version): [10.5281/zenodo.23029471](https://doi.org/10.5281/zenodo.23029471)
+- Version 1 DOI (published 2026-09-29): [10.5281/zenodo.23029472](https://doi.org/10.5281/zenodo.23029472)
+
+Version 1 contains the September snapshot only (the `datasets/` tables; archive files `DATASET.md` and `dataset.zip` with MD5 checksums) and predates the October supplement packages (`MF600s`, `Multi-Site_Value`, `Foundation_Flexibility`, `Quantum_Module_Contribution`). Its record reflects the earlier screening chain (300 + 100 ten-second high-fidelity cases, 1,500 reliability designs, 12 final validation runs at 4 designs x 3 seeds) and is filed with the resource type "Journal". A replacement Zenodo version is planned that includes the revised data chain (1,200 multi-seed 600 s response runs; 4,137 development + 828 holdout reliability designs; 24 final validation runs at 8 envelope conditions x 3 wave seeds; MF600s revised results, multi-site, foundation-flexibility, and QAE-ablation packages), uses the resource type "Dataset", and is cited in the manuscript by its specific version DOI.
+
+The full content is already committed to the public GitHub repository, so downloading the archive is not required to run the packaged code and tests. The supplement packages are tagged in the GitHub release `supplement-600s` (published 2026-10-08); a release or recorded commit SHA matching the next Zenodo version will accompany it.
+
+### 1.2 Upstream data sources and citable identifiers
+
+| Resource | Citable identifier | Use in this work |
+| --- | --- | --- |
+| QAE-ABC dataset | Concept DOI [10.5281/zenodo.23029471](https://doi.org/10.5281/zenodo.23029471); version 1 DOI [10.5281/zenodo.23029472](https://doi.org/10.5281/zenodo.23029472) | Cite the specific DOI of the updated version in the final manuscript |
+| ERA5 reanalysis dataset | [10.24381/cds.adbb2d47](https://doi.org/10.24381/cds.adbb2d47) | Primary dataset DOI for the environmental data |
+| ERA5 method paper | Hersbach et al. (2020), [10.1002/qj.3803](https://doi.org/10.1002/qj.3803) | Cite together with the dataset DOI |
+| Open-Meteo API | Zippenfenig (2023), [10.5281/zenodo.7970649](https://doi.org/10.5281/zenodo.7970649) | The ERA5 records were retrieved through the Open-Meteo API |
+| NDBC buoy observations | No unified dataset DOI; cite the NCEI dataset page with stations, years and access dates | See the recommended citation below |
+| NDBC data stewardship report | [10.25923/xe7t-ay83](https://doi.org/10.25923/xe7t-ay83) | Data management/maturity report DOI, not an observation-data DOI |
+| OpenFAST 5.0.0 | [10.5281/zenodo.18992186](https://doi.org/10.5281/zenodo.18992186) | Version-pinned software DOI for all OpenFAST simulations |
+| OC4 jacket reference model | Popko et al. (2012) with NREL/CP-5000-54124 | No publisher DOI for the official literature; see below |
+
+Recommended citations for the upstream data:
+
+- Copernicus Climate Change Service. ERA5 hourly data on single levels from 1940 to present. Climate Data Store. https://doi.org/10.24381/cds.adbb2d47
+- Hersbach, H., et al. (2020). The ERA5 global reanalysis. Quarterly Journal of the Royal Meteorological Society, 146(730), 1999-2049. https://doi.org/10.1002/qj.3803
+- Zippenfenig, P. (2023). Open-Meteo.com Weather API [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.7970649
+- NOAA National Data Buoy Center (1971). Meteorological and oceanographic data collected from the National Data Buoy Center Coastal-Marine Automated Network (C-MAN) and moored (weather) buoys [stations 44025, 41025, and 46026; 2014-2023]. NOAA National Centers for Environmental Information. Dataset. https://www.ncei.noaa.gov/archive/accession/NDBC-CMANWx. Accessed 3 September 2026 (station 44025 source-site cache) and 8 October 2026 (multi-site target stations 41025 and 46026).
+- OpenFAST Developers (2026). OpenFAST v5.0.0 [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.18992186
+- Popko, W., Vorpahl, F., Zuga, A., et al. (2012). Offshore Code Comparison Collaboration Continuation (OC4), Phase I - Results of coupled simulations of an offshore wind turbine with jacket support structure. Proceedings of the 22nd International Offshore and Polar Engineering Conference, Rhodes, Greece, 337-346. NREL conference version: NREL/CP-5000-54124.
+
+Notes:
+
+- The ERA5-based records in this snapshot were obtained through the Open-Meteo API, so downstream use should cite the ERA5 dataset, the ERA5 method paper, and the Open-Meteo API record together. The raw responses are preserved under `raw/meteocean/open_meteo_era5_north_sea/` (source site) and `raw/meteocean/open_meteo_era5_ndbc44025/` (observation-validation site).
+- The OC4 reference-model literature has no publisher-assigned DOI; the ResearchGate upload DOI (10.13140/...) is an upload record, not a publisher DOI, and is not used.
+- Station 44025 observations serve as the source-site observation-validation record (`raw/meteocean/ndbc_44025/`, processed tables for 2014-2023). The multi-site records for stations 44025, 41025, and 46026 (2014-2023 paired observations and hourly ERA5 inputs) are distributed with the supplement package [data/supplement/Multi-Site_Value/](../data/supplement/Multi-Site_Value/README.md).
 
 ## 2. Dataset overview
 
@@ -290,15 +328,3 @@ print(meta_test[["design_id", "empirical_probability", column]].head())
 
 Use geometry as design-level predictors and the appropriate reliability quantity as the target. Failure counts, feasibility labels, and probability/response summaries are not independent design inputs.
 
-## 7. Scope, limitations and provenance
-
-- NDBC 44025 is near Long Island, New York, **not colocated with the North Sea engineering site**. Its comparison supports processing/distribution checks, not local validation of North Sea weather.
-- The original 400-HF screening snapshot used 10 s runs; the revised MF600s chain retrained on 1,200 successful 600 s runs (see `data/supplement/MF600s/`). Their DEL values do not establish certification-level fatigue performance.
-- The revised 24 independent 600 s verification runs of the selected design (8 envelope conditions x 3 wave seeds) are limited dynamic spot checks, not all design load cases or a complete certification campaign.
-- The design-environment combinations (original snapshot 1,500 x 8,192; revised chain 4,137 x 8,192 plus 828 x 8,192 holdout) are **surrogate evaluations**, not that many OpenFAST runs. Their probabilities describe modeled system-response exceedance under the study's operating-environment and calibrated-capacity definitions, not directly measured annual physical failure probabilities.
-- This directory contains tabular samples and response summaries, not all raw OpenFAST time histories, executable binaries, frozen split manifests, capacity reports or calibration artifacts.
-- The scripts under [experiments/](../experiments/README.md) expect the original project's runtime layout. Reading these datasets works independently; rerunning the entire study requires the original inputs, tools, configuration and path contract.
-- Raw caches preserve downloaded source material. Check source-specific attribution and redistribution terms before public release. This document does not assign a new license to third-party data.
-- The Zenodo archive (DOI 10.5281/zenodo.23029471, CC-BY-4.0) provides the persistent, checksummed copy of this snapshot; the repository content is identical, so no separate download is required.
-
-All counts and examples above describe the retained local snapshot. This documentation update does not modify, regenerate or upload any dataset.
