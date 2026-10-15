@@ -20,7 +20,7 @@ The repository packages the computational code, **13 experiment entry points**, 
 | Observation cross-check | NDBC 44025, 2014–2023; 81,459 time-paired rows, not colocated with the North Sea site |
 | Engineering response samples | 5,000 LF cases and 1,200 successful 600 s HF runs (20 design–environment cells × 60 wave seeds) |
 | High-fidelity solver | [OpenFAST 5.0.0](https://github.com/OpenFAST/openfast) — official repository, [release v5.0.0](https://github.com/OpenFAST/openfast/releases/tag/v5.0.0) |
-| Reliability metamodel | 4,137 development designs plus 828 independent holdout designs; labels evaluated over 8,192 environmental samples per design ([FC-4](data/supplement/MF600s/)) |
+| Reliability metamodel | 4,137 total labeled designs, of which 3,309 metamodel-training and 828 independent holdout designs; labels evaluated over 8,192 environmental samples per design ([FC-4](data/supplement/MF600s/)) |
 | Final dynamic checks | 24 independent 600 s verification runs of the selected design (8 envelope conditions × 3 wave seeds), all passing ([FC-7](data/supplement/MF600s/)) |
 | Quantum evidence | Scalar-amplitude simulations, ideal functional circuits, calibrated-noise simulations and compiled resources |
 | Hardware status | No real-QPU execution is claimed |
@@ -99,12 +99,12 @@ The analytic and nonlinear studies compare estimators directly rather than assum
 <td><strong>Figure 8 · Optimization results.</strong> Truss benchmark, component effects, and the revised 600 s OC4 endpoints.</td>
 </tr>
 <tr>
-<td width="50%"><a href="Figures/pdf/Figure11.pdf"><img src="Figures/Figure11.png" alt="Figure 11 — Search-parameter effects and probability-estimation error in design selection" width="100%"></a></td>
-<td width="50%"><a href="Figures/pdf/Figure12.pdf"><img src="Figures/Figure12.png" alt="Figure 12 — Probability-estimator error and interval coverage for representative OC4 designs (600 s chain)" width="100%"></a></td>
+<td width="50%"><a href="Figures/pdf/Figure11.pdf"><img src="Figures/Figure11.png" alt="Figure 11 — Probability-estimator performance across representative OC4 designs" width="100%"></a></td>
+<td width="50%"><a href="Figures/pdf/Figure12.pdf"><img src="Figures/Figure12.png" alt="Figure 12 — Search-parameter effects and probability-estimation error in design selection" width="100%"></a></td>
 </tr>
 <tr>
-<td><strong>Figure 11 · Design selection.</strong> Search settings and estimation error effects on structural decisions.</td>
-<td><strong>Figure 12 · Jacket probability estimates.</strong> Relative error and interval coverage across the six representative designs of the 600 s chain.</td>
+<td><strong>Figure 11 · Estimator performance.</strong> Probability-estimation error and interval coverage across the six representative designs of the 600 s chain.</td>
+<td><strong>Figure 12 · Design selection.</strong> Search settings and estimation error effects on structural decisions.</td>
 </tr>
 </table>
 
@@ -137,8 +137,8 @@ The [`Figures/`](Figures/) directory follows manuscript numbering from **Figure 
 | 8 | Jacket optimization, truss comparisons and algorithm ablations | [PNG](Figures/Figure8.png) | [PDF](Figures/pdf/Figure8.pdf) |
 | 9 | Truss endpoint mass and exact feasibility across twelve configurations | [PNG](Figures/Figure9.png) | [PDF](Figures/pdf/Figure9.pdf) |
 | 10 | Algorithm-component effects and exact endpoint correction | [PNG](Figures/Figure10.png) | [PDF](Figures/pdf/Figure10.pdf) |
-| 11 | Search-parameter sensitivity and estimation effects on design selection | [PNG](Figures/Figure11.png) | [PDF](Figures/pdf/Figure11.pdf) |
-| 12 | Estimator performance across the six representative OC4 designs (600 s chain) | [PNG](Figures/Figure12.png) | [PDF](Figures/pdf/Figure12.pdf) |
+| 11 | Probability-estimator performance across the six representative OC4 designs (600 s chain) | [PNG](Figures/Figure11.png) | [PDF](Figures/pdf/Figure11.pdf) |
+| 12 | Search-parameter sensitivity and estimation effects on design selection | [PNG](Figures/Figure12.png) | [PDF](Figures/pdf/Figure12.pdf) |
 
 ## Experimental design
 
@@ -166,7 +166,7 @@ The [`Figures/`](Figures/) directory follows manuscript numbering from **Figure 
 | Truss adaptive query budgets | 512, 2,048, 8,192 |
 | North Sea temporal partition | Fit: 2000–2019; temporal evaluation: 2020–2024 |
 | OC4 response evaluation | 1,200-run MF600s basis; leave-one-cell-out and full evaluation ([Table 5](data/Table5.csv)) |
-| OC4 reliability evaluation | 4,137 development designs and 828 holdout designs ([Table 6](data/Table6.csv)) |
+| OC4 reliability evaluation | 4,137 labeled designs in total, of which 3,309 metamodel-training and 828 holdout ([Table 6](data/Table6.csv)) |
 
 These settings belong to different experimental layers; consult [configs/](experiments/configs/) and the relevant script for its precise protocol. The 4,137 × 8,192 design–environment combinations of the revised reliability chain ([FC-4](data/supplement/MF600s/)) are surrogate evaluations, not OpenFAST runs.
 
@@ -229,7 +229,7 @@ QAE-ABC/
 
 The research datasets are archived on Zenodo, DOI [10.5281/zenodo.23029471](https://doi.org/10.5281/zenodo.23029471) (CC-BY-4.0); the same snapshot is included under `datasets/` so the packaged code and tests run without downloading the archive. The [dataset guide](datasets/DATASET.md) documents all 18 Parquet files, variable definitions, splits and read-only examples. Two usage notes:
 
-- `datasets/` retains the original screening-era parquet snapshot — its reliability holdout tables carry 1,500 indexed rows but only 300 non-null predictions per held-out column. The revised-manuscript reliability chain uses 4,137 development designs plus an 828-design independent holdout ([FC-4](data/supplement/MF600s/)); revised response, reliability and verification numbers come from [`data/supplement/MF600s/`](data/supplement/MF600s/) and `data/Table4.csv`–`Table16.csv`.
+- `datasets/` retains the original screening-era parquet snapshot — its reliability holdout tables carry 1,500 indexed rows but only 300 non-null predictions per held-out column. The revised-manuscript reliability chain uses a 4,137-design labeled dataset in total, of which 3,309 metamodel-training designs and an 828-design independent holdout ([FC-4](data/supplement/MF600s/)); revised response, reliability and verification numbers come from [`data/supplement/MF600s/`](data/supplement/MF600s/) and `data/Table4.csv`–`Table16.csv`.
 - Truss records share designs — keep all realizations of a design in the same split; the 400-case OC4 table already includes the initial 300 and added 100 cases, so do not concatenate them twice.
 
 ### Main result tables

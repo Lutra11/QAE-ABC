@@ -22,7 +22,7 @@ The dataset snapshot is archived on Zenodo (CC-BY-4.0):
 
 Zenodo version 1 archives the September snapshot only: 400 short-window OpenFAST cases, 1,500 reliability designs, and 12 validation runs. It does **not** contain the MF600s chain (1,200 multi-seed 600 s simulations; 4,137 reliability designs, comprising 3,309 training and 828 independent holdout designs; and 24 final verification runs) or the later supplement packages. These files are available in the GitHub repository. 
 
-The supplement packages are available in the public GitHub repository and the `supplement-600s` release (2026-10-08). 
+The supplement packages are available in the public GitHub repository and the `FullChain-600s-Reconstruction-OC4-NAQAEABC` release (2026-10-08). 
 
 ### 1.2 Upstream data sources and citable identifiers
 
